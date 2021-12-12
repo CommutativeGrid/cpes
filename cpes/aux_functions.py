@@ -7,6 +7,7 @@ Created on Wed Dec  8 18:19:56 2021
 """
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
+from scipy.spatial.distance import euclidean
 from rdfpy import rdf
 import matplotlib.pyplot as plt
 from random import choice
@@ -87,3 +88,14 @@ def center_point_cloud(data):
     mass_center=np.mean(data,axis=0)
     return np.argmin(euclidean_distances([mass_center],data))
     
+def atomic_packing_factor(data,radius=1):
+    """
+    returns the atomic packing factor
+    """
+    x,y,z = zip(*data)
+    a,b=[(min(x), min(y), min(z)), (max(x), max(y), max(z))]
+    #a,b,c=(max(x)-min(x), max(y)-min(y), max(z)-min(z))
+    total=np.sqrt(3)*euclidean(a,b)**3/9. #volume computed from the body diagonal
+    #volume of the bounding box to be optimized.
+    occupied=4*np.pi/3*len(data)*radius**3 # volume of the occupied region
+    return occupied/total

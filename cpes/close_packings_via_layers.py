@@ -115,23 +115,12 @@ class close_packing:
         """
         return coordination_number(self.data,2*self.radius)
 
-    @staticmethod
-    def bounding_box(points):
-        """
-        helper function for computing the packing density
-        """
-        x,y,z = zip(*points)
-        return [(min(x), min(y), min(z)), (max(x), max(y), max(z))]
-
     def ratio(self):
         """
         return the packing density
         """
-        a,b=self.bounding_box(self.data)
-        total=sqrt(3)*distance.euclidean(a,b)**3/9. #volume computed from the body diagonal
-        #volume of the bounding box to be optimized.
-        occupied=4*pi/3*len(self) # volume of the occupied region
-        return occupied/total
+        return atomic_packing_factor(self.data,self.radius)
+
 
 class face_centered_cubic(close_packing):
     """
