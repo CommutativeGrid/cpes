@@ -1,0 +1,8 @@
+LICENSE
+README.md
+setup.py
+cpes.egg-info/PKG-INFO
+cpes.egg-info/SOURCES.txt
+cpes.egg-info/dependency_links.txt
+cpes.egg-info/requires.txt
+cpes.egg-info/top_level.txt

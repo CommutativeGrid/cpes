@@ -1,0 +1,5 @@
+numpy
+sklearn
+rdfpy
+matplotlib
+hexalattice

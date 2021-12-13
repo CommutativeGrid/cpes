@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: cpes
+Version: 0.1.0
+Summary: Close-packing of equal spheres
+Home-page: UNKNOWN
+Author: 初春飾利
+Author-email: xu.chenguang.43m@st.kyoto-u.ac.jp
+License: MIT
+Platform: UNKNOWN
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Close-packing of equal spheres
+
+This package provides the following three main functions:
+
+* Construct fcc/hcp lattice layer by layer
+* Construct fcc/hcp lattice via building conventional cells.
+* Load the fcc/hcp coordinates of atoms from [ISAACS](http://isaacs.sourceforge.net/ex.html#Si)
+
