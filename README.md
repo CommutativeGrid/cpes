@@ -1,5 +1,4 @@
-# Close-packing of equal spheres
-# 球の正規最密充填
+# Close-packing of equal spheres (球の正規最密充填)
 
 This package provides the following three functions:
 
