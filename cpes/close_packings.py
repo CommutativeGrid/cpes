@@ -15,16 +15,16 @@ class face_centered_cubic(simple_cubic):
     """fcc class
     cubic close packing
     """
-    def __init__(self,num_cells_axis=10,sphere_radius='sqrt(2)/4'):
+    def __init__(self,num_cells_axis=10,radius='sqrt(2)/4'):
         """
         a = side length
-        sphere_radius = sqrt(2)/4 * a
+        radius = sqrt(2)/4 * a
         """
-        if sphere_radius == 'sqrt(2)/4':
+        if radius == 'sqrt(2)/4':
             self.side_l = 1.0
         else:
-            self.side_l = 4*sphere_radius/sqrt(2)
-        self.sphere_radius = sphere_radius
+            self.side_l = 4*radius/sqrt(2)
+        self.radius = radius
         super().__init__(num_cells_axis=num_cells_axis,side_l=self.side_l)
         for x in range(0,self.length-1):
             for y in range(0,self.length-1):
@@ -70,8 +70,8 @@ class hexagonal_close_packing(crystal_system):
     see the following page for visualization
     http://lampx.tugraz.at/~hadley/ss1/crystalstructure/structures/hcp/hcp.php
     """
-    def __init__(self,num_cells_axis=10,sphere_radius=sqrt(2)/4):
-        self.sphere_radius = sphere_radius
+    def __init__(self,num_cells_axis=10,radius=sqrt(2)/4):
+        self.radius = radius
         self.length=num_cells_axis+2
         self._unit_grid=[]
         #sqrt3=sqrt(3)
@@ -83,19 +83,19 @@ class hexagonal_close_packing(crystal_system):
                     self._unit_grid.append([2*x+(y+z)%2,
                                             1+sqrt(3*(temp*temp)),#include the parameter within the square root to increase precision
                                             1+2*sqrt(6*z*z)/3])
-        self.data=np.array(self._unit_grid)*self.sphere_radius
+        self.data=np.array(self._unit_grid)*self.radius
         self.data = self.data - self.data[center_point_cloud(self.data)] #centralize the point cloud
         self.data=np.around(self.data,decimals=7)
 
     def color_map(self,x,y,z):
         """function used for assigning different colors for different types of atoms."""
-        coeff=sqrt(6)*2*self.sphere_radius
+        coeff=sqrt(6)*2*self.radius
         return z%coeff
 
 
 if __name__ == '__main__':
-    a=face_centered_cubic(num_cells_axis=10,sphere_radius=1)
+    a=face_centered_cubic(num_cells_axis=10,radius=1)
     #a.plot()
-    b=hexagonal_close_packing(num_cells_axis=10,sphere_radius=1)
+    b=hexagonal_close_packing(num_cells_axis=10,radius=1)
     #b.plot()
     a.rdf_plot()

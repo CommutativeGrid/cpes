@@ -49,7 +49,52 @@ class layer:
 
         self.coords = hex_centers+self.shift # shift the whole layer accordingly
 
-class close_packing:
+class points_3d:
+    """
+    Basic class for 3d points
+    """
+    def __init__(self, data):
+        self.data = data
+
+    def plot(self,alpha=0.8,size=400):
+        """plot spheres in 3d"""
+        #fig=plt.figure(figsize=(10,10),dpi=100)
+        fig=plt.figure()
+        ax=fig.add_subplot(111,projection='3d')
+        color_vector=[self.color_map(*vec) for vec in self.data]
+        ax.scatter(self.data[:,0],self.data[:,1],self.data[:,2],alpha=alpha,s=size,c=color_vector)
+
+    def color_map(self,x,y,z)->float:
+        """function used for assigning different colors for different types of atoms."""
+        return z
+
+    def __len__(self):
+        return len(self.data)
+
+    def __repr__(self) -> str:
+        return self.data.__repr__()
+
+    def distance_array(self,n=20):
+        """
+        Compute the distance to the k-th nearest neighbor for all atoms in the point cloud.
+        """
+        return distance_array(self.data,n)
+
+    def sphere_confine(self,radius):
+        return points_3d(sphere_confine(self.data,radius))
+    @property
+    def diameter(self):
+        """
+        returns the diameter of the point cloud
+        """
+        if hasattr(self,'_diameter'):
+            return self._diameter
+        else:
+            self._diameter = max(distance.cdist(self.data,self.data,'euclidean').flatten())
+            return self._diameter
+
+
+class close_packing(points_3d):
 
     def __init__(self,num,radius,num_vector,*args,**kwargs):
         """a class with support methods for close packings
@@ -70,32 +115,8 @@ class close_packing:
         self.z_step = sqrt(6)/3 # tranlsation amount in the vertical direction
         self.multiplier = radius/0.5 # the default radius is 0.5, so we need to multiply by this to get the actual radius
         #will create the default sized layers first
-        self.data = np.empty((0,3), float)
+        super().__init__(data=np.empty((0,3), float))
 
-    def plot(self,alpha=0.8,size=400):
-        """plot spheres in 3d"""
-        #fig=plt.figure(figsize=(10,10),dpi=100)
-        fig=plt.figure()
-        ax=fig.add_subplot(111,projection='3d')
-        color_vector=[self.color_map(*vec) for vec in self.data]
-        ax.scatter(self.data[:,0],self.data[:,1],self.data[:,2],alpha=alpha,s=size,c=color_vector)
-
-    def color_map(self,x,y,z):
-        """function used for assigning different colors for different types of atoms."""
-        return z
-
-    def __len__(self):
-        return len(self.data)
-    
-    def distance_array(self,n=20):
-        """
-        Compute the distance to the k-th nearest neighbor for all atoms in the point cloud.
-        """
-        return distance_array(self.data,n)
-
-    def sphere_confine(self,radius):
-        return sphere_confine(self.data,radius)
-    
     def thinning(self,survival_rate,save=False,style='homcloud'):
         data = thinning(self.data,survival_rate,style=style)
         if save:
@@ -109,18 +130,6 @@ class close_packing:
                 print(f'File saved @ {file_path}')
         else:
             return data
-        
-
-    @property
-    def diameter(self):
-        """
-        returns the diameter of the point cloud
-        """
-        if hasattr(self,'_diameter'):
-            return self._diameter
-        else:
-            self._diameter = max(distance.cdist(self.data,self.data,'euclidean').flatten())
-            return self._diameter
 
     @staticmethod
     def lift(layer,z):
