@@ -4,17 +4,45 @@ Version: 0.1.0
 Summary: Close-packing of equal spheres
 Home-page: UNKNOWN
 Author: 初春飾利
-Author-email: xu.chenguang.43m@st.kyoto-u.ac.jp
+Author-email: xucgphi@gmail.com
 License: MIT
 Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Topic :: Scientific/Engineering
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
-# Close-packing of equal spheres
+# Close-packing of equal spheres 球の正規最密充填
 
 This package provides the following three main functions:
 
 * Construct fcc/hcp lattice layer by layer
 * Construct fcc/hcp lattice via building conventional cells.
 * Load the fcc/hcp coordinates of atoms from [ISAACS](http://isaacs.sourceforge.net/ex.html#Si)
+
+## Installation
+
+```
+git clone https://github.com/Commutative-Ladders/cpes.git
+```
+then `cd` to the cloned foler, and
+```
+pip install .
+```
+
+To upgrade, run
+```
+pip install . --upgrade
+```
+
+### Installation in developement(editable) mode
+
+> Deploy your project in “development mode”, such that it’s available on sys.path, yet can still be edited directly from its source checkout.
+
+```
+pip install -e .
+```
 

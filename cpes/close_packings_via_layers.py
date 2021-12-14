@@ -13,6 +13,7 @@ from math import sqrt
 from scipy.spatial import distance
 import matplotlib.pyplot as plt
 from .aux_functions import *
+import os
 
 
 # create fcc and hcp by adding layers
@@ -20,13 +21,13 @@ from .aux_functions import *
 # hcp layer A,B
 # for details see https://en.wikipedia.org/wiki/Close-packing_of_equal_spheres
 
-@dataclass
-class layer:
-    name: str #A,B or A,B,C
-    radius: float # default is 0.5
-    nx: int # number of cells in x direction
-    ny: int # number of cells in y direction
-    coords: np.ndarray # coordinates of each atom/center of hexagon in this layer
+# @dataclass
+# class layer:
+#     name: str #A,B or A,B,C
+#     radius: float # default is 0.5
+#     nx: int # number of cells in x direction
+#     ny: int # number of cells in y direction
+#     coords: np.ndarray # coordinates of each atom/center of hexagon in this layer
 
 class layer:
     """
@@ -71,23 +72,44 @@ class close_packing:
         #will create the default sized layers first
         self.data = np.empty((0,3), float)
 
-    def plot(self):
+    def plot(self,alpha=0.8,size=400):
         """plot spheres in 3d"""
         #fig=plt.figure(figsize=(10,10),dpi=100)
         fig=plt.figure()
         ax=fig.add_subplot(111,projection='3d')
         color_vector=[self.color_map(*vec) for vec in self.data]
-        ax.scatter(self.data[:,0],self.data[:,1],self.data[:,2],alpha=0.8,s=400.,c=color_vector)
+        ax.scatter(self.data[:,0],self.data[:,1],self.data[:,2],alpha=alpha,s=size,c=color_vector)
 
     def color_map(self,x,y,z):
         """function used for assigning different colors for different types of atoms."""
-        raise NotImplementedError
+        return z
 
     def __len__(self):
         return len(self.data)
     
     def distance_array(self,n=20):
+        """
+        Compute the distance to the k-th nearest neighbor for all atoms in the point cloud.
+        """
         return distance_array(self.data,n)
+
+    def sphere_confine(self,radius):
+        return sphere_confine(self.data,radius)
+    
+    def thinning(self,survival_rate,save=False,style='homcloud'):
+        data = thinning(self.data,survival_rate,style=style)
+        if save:
+            cwd = os.getcwd()
+            file_name=f'{type(self).__name__}_{self.num}_{survival_rate}_thinned.out'
+            file_path = os.path.join(cwd,file_name)
+            if os.path.isfile(file_path):
+                raise FileExistsError(f'File {file_path} already exists.')
+            else:
+                np.savetxt(file_path,data,fmt=['%d']+['%.6f']*3,delimiter=' ')
+                print(f'File saved @ {file_path}')
+        else:
+            return data
+        
 
     @property
     def diameter(self):

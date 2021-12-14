@@ -81,8 +81,8 @@ class hexagonal_close_packing(crystal_system):
                 for z in range(0,self.length):
                     temp=y+(z%2)/3.
                     self._unit_grid.append([2*x+(y+z)%2,
-                                            sqrt(3*(temp*temp)),
-                                            2*sqrt(6*z*z)/3])
+                                            1+sqrt(3*(temp*temp)),#include the parameter within the square root to increase precision
+                                            1+2*sqrt(6*z*z)/3])
         self.data=np.array(self._unit_grid)*self.sphere_radius
         self.data = self.data - self.data[center_point_cloud(self.data)] #centralize the point cloud
         self.data=np.around(self.data,decimals=7)

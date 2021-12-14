@@ -11,6 +11,7 @@ from scipy.spatial.distance import euclidean
 from rdfpy import rdf
 import matplotlib.pyplot as plt
 from random import choice
+from operator import itemgetter
 
 def distance_array(data,n=20):
     """
@@ -67,14 +68,12 @@ def coordination_number(data,crictical_value,anchor='random'):
     return count-1 # minus itself
 
 def sphere_confine(data,radius):
-    """
-    confine the data to a sphere with radius
+    """confine the data to a sphere with the given radius
     """
     return np.array([pt for pt in data if np.linalg.norm(pt)<radius])
 
 def plot_3d(data):
-    """
-    plot 3d
+    """plot data in 3d
     """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -82,15 +81,13 @@ def plot_3d(data):
     plt.show()
     
 def center_point_cloud(data):
-    """
-    return the index of the point closest to the center of the point cloud
+    """return the index of the point closest to the center of the point cloud
     """
     mass_center=np.mean(data,axis=0)
     return np.argmin(euclidean_distances([mass_center],data))
     
 def atomic_packing_factor(data,radius=1):
-    """
-    returns the atomic packing factor
+    """returns the atomic packing factor
     """
     x,y,z = zip(*data)
     a,b=[(min(x), min(y), min(z)), (max(x), max(y), max(z))]
@@ -99,3 +96,21 @@ def atomic_packing_factor(data,radius=1):
     #volume of the bounding box to be optimized.
     occupied=4*np.pi/3*len(data)*radius**3 # volume of the occupied region
     return occupied/total
+
+def thinning(data,survival_rate,style='homcloud'):
+    '''delete points randomly from data. 
+    If style is homcloud, remained points will be labelled 0.
+    
+    The meaning of 間引き率 in the paper may lead different understandings 
+    (for example see table 1 in section 4 of 
+    [this](https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja) paper).
+    '''
+    l=len(data)
+    index_remained=np.random.choice(l,int(l*survival_rate),replace=False)
+    if style=='homcloud':
+        label_rule=lambda i: 0 if i in index_remained else 1
+        labelled_data=[(label_rule(i),*vec) for i,vec in enumerate(data)]
+        sorted_result=sorted(labelled_data, key=itemgetter(0))
+    else:
+        raise NotImplementedError
+    return sorted_result
