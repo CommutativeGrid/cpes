@@ -98,7 +98,7 @@ class points_3d:
         add perturbation to the point cloud
         """
         mean=0
-        sigma=1e-5
+        sigma=1e-3
         flattened=self.data.flatten()
         flattened_perturbed = flattened + np.random.normal(mean,sigma,len(flattened))
         self.data = flattened_perturbed.reshape(self.data.shape)
