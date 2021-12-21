@@ -93,6 +93,16 @@ class points_3d:
             self._diameter = max(distance.cdist(self.data,self.data,'euclidean').flatten())
             return self._diameter
 
+    def add_perturbtation(self):
+        """
+        add perturbation to the point cloud
+        """
+        mean=0
+        sigma=1e-5
+        flattened=self.data.flatten()
+        flattened_perturbed = flattened + np.random.normal(mean,sigma,len(flattened))
+        self.data = flattened_perturbed.reshape(self.data.shape)
+
 
 class close_packing(points_3d):
 
@@ -158,7 +168,7 @@ class face_centered_cubic(close_packing):
     cubic close packing / face centered cubic
     pattern ABCABCACB...
     """
-    def __init__(self,num=5,radius=0.5,num_vector='auto'):
+    def __init__(self,num=5,radius=0.5,num_vector='auto',perturbation=True):
         super().__init__(num=num,radius=radius,num_vector=num_vector)
         nx,ny,nz=self.num_vector
         layer_A = layer(nx=nx,ny=ny,type='A')
@@ -174,8 +184,10 @@ class face_centered_cubic(close_packing):
         self.data*=self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation #centralize the point cloud
-        self.shift_z = self.translation[2]
-        self.data=np.around(self.data,decimals=7)
+        self.shift_z = self.translation[2] # used in color_map to modify the color accordingly
+        #self.data=np.around(self.data,decimals=7)
+        if perturbation is True:
+            self.add_perturbtation()
 
 
     def color_map(self,x,y,z):
@@ -188,7 +200,7 @@ class hexagonal_close_packing(close_packing):
     """
     cubic close packing
     """
-    def __init__(self,num=5,radius=0.5,num_vector='auto'):
+    def __init__(self,num=5,radius=0.5,num_vector='auto',perturbation=True):
         super().__init__(num=num,radius=radius,num_vector=num_vector)
         nx,ny,nz=self.num_vector
         layer_A = layer(nx=nx,ny=ny,type='A')
@@ -201,26 +213,13 @@ class hexagonal_close_packing(close_packing):
         self.data*=self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation #centralize the point cloud
-        self.shift_z = self.translation[2]
-        self.data=np.around(self.data,decimals=7)
+        self.shift_z = self.translation[2] # used in color_map to modify the color accordingly
+        #self.data=np.around(self.data,decimals=7)
+        if perturbation is True:
+            self.add_perturbtation()
         
     def color_map(self,x,y,z):
         """function used for assigning different colors for different types of atoms."""
         coeff=self.multiplier
         return (np.around(1.5*(z+self.shift_z)/sqrt(6),2))%coeff
     
-
-
-
-if __name__ == '__main__':
-    fcc=face_centered_cubic(17,radius=1)
-    hcp=hexagonal_close_packing(17,radius=1)
-    fcc.rdf_plot()
-    
-# =============================================================================
-#     a=layer(10,10,'A')
-#     b=layer(10,10,'B')
-#     c=layer(10,10,'C')
-#     
-# =============================================================================
-
