@@ -98,7 +98,7 @@ class points_3d:
         add perturbation to the point cloud
         """
         mean=0
-        sigma=1e-3
+        sigma=1e-5
         flattened=self.data.flatten()
         flattened_perturbed = flattened + np.random.normal(mean,sigma,len(flattened))
         self.data = flattened_perturbed.reshape(self.data.shape)
@@ -168,7 +168,7 @@ class face_centered_cubic(close_packing):
     cubic close packing / face centered cubic
     pattern ABCABCACB...
     """
-    def __init__(self,num=5,radius=0.5,num_vector='auto',perturbation=True):
+    def __init__(self,num=5,radius=0.5,num_vector='auto',perturbation=False):
         super().__init__(num=num,radius=radius,num_vector=num_vector)
         nx,ny,nz=self.num_vector
         layer_A = layer(nx=nx,ny=ny,type='A')
@@ -200,7 +200,7 @@ class hexagonal_close_packing(close_packing):
     """
     cubic close packing
     """
-    def __init__(self,num=5,radius=0.5,num_vector='auto',perturbation=True):
+    def __init__(self,num=5,radius=0.5,num_vector='auto',perturbation=False):
         super().__init__(num=num,radius=radius,num_vector=num_vector)
         nx,ny,nz=self.num_vector
         layer_A = layer(nx=nx,ny=ny,type='A')
