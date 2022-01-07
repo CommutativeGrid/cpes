@@ -28,6 +28,7 @@ INSTALL_REQUIRES = [
       'rdfpy',
       'matplotlib',
       'hexalattice',
+      'requests',
 ]
 
 setup(name=PACKAGE_NAME,

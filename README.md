@@ -23,7 +23,7 @@ pip install . --upgrade
 
 ### Installation in developement (editable) mode
 
-> Deploy your project in “development mode”, such that it’s available on sys.path, yet can still be edited directly from its source checkout.
+> Deploy your project in "development mode”, such that it’s available on sys.path, yet can still be edited directly from its source checkout.
 
 ```
 pip install -e .

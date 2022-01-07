@@ -97,10 +97,19 @@ def atomic_packing_factor(data,radius=1):
     occupied=4*np.pi/3*len(data)*radius**3 # volume of the occupied region
     return occupied/total
 
-def thinning(data,survival_rate,style='homcloud'):
+def thinning(data,survival_rate,style):
     '''delete points randomly from data. 
-    If style is homcloud, remained points will be labelled 0.
-    
+
+    Parameters
+    ----------
+    data : ndarray
+        the data to be thinned
+    survival_rate : float
+        percentage of points to survive
+    style : str, optional
+        the style of thinning. The default is 'homcloud'.
+        'homcloud' : remained points will be labelled 0.
+        'survived' : only returns the survived points.
     The meaning of 間引き率 in the paper may lead different understandings 
     (for example see table 1 in section 4 of 
     [this](https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja) paper).
@@ -111,6 +120,9 @@ def thinning(data,survival_rate,style='homcloud'):
         label_rule=lambda i: 0 if i in index_remained else 1
         labelled_data=[(label_rule(i),*vec) for i,vec in enumerate(data)]
         sorted_result=sorted(labelled_data, key=itemgetter(0))
-    else:
+        return (data[index_remained],sorted_result)
+    elif style=='survived':
+        return (data[index_remained],None)
+    else:    
         raise NotImplementedError
-    return sorted_result
+    
