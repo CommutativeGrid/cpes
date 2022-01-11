@@ -1,1 +1,1 @@
-from .file_operations import tempfile_from_url
+from .file_operations import TempfileFromUrl

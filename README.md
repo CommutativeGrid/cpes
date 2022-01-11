@@ -36,18 +36,18 @@ pip install -e .
 Build a 10x10x10 hcp lattice, with sphere radius 1.0. Generated data is nearly centered, has an atom at (0,0,0), with the normal vector of any added layer points upwards vertically:
 
 ```python
-from cpes import face_centered_cubic, hexagonal_close_packing
+from cpes import FaceCenteredCubic, HexagonalClosePacking
 import numpy as np
 
-fcc_generated=face_centered_cubic(10,radius=1.0) 
+fcc=FaceCenteredCubic(10,radius=1.0) 
 
-print(fcc_generated.data) # access the coordinates
+print(fcc.data) # access the coordinates
 np.savetxt('fcc.xyz',fcc.data) # save the coordinates to a file
 coords=np.loadtxt('fcc.xyz') # load coordinates from a file
 ```
 Execute a thinning process with survival rate 0.5, and save the file in accordan with the format of homcloud:
 ```python
-fcc_generated.thinning(survival_rate=0.5,save=True,style='homcloud')
+fcc.thinning(survival_rate=0.5,save=True,style='homcloud')
 ```
 
 
@@ -56,9 +56,9 @@ fcc_generated.thinning(survival_rate=0.5,save=True,style='homcloud')
 
 Load the Cartesian coordinates of Au:
 ```python
-from cpes import fcc_au_cart
+from cpes import FccAuCart
 
-fcc_au=fcc_au_cart(mode='online')
+fcc_au=FccAuCart(mode='online')
 fcc_au.original # access the original cartesian coordinates
 fcc_au.data # access the normalized coordinates (such that the sphere radius becomes 1.0)
 ```
