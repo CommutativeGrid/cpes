@@ -9,11 +9,13 @@ Read the coordinates data downloaded from isaacs
 http://isaacs.sourceforge.net/ex.html#Si
 """
 
-import numpy as np
 import os
-from .utils import TempfileFromUrl
 from tempfile import NamedTemporaryFile
+
+import numpy as np
+
 from .close_packings_via_layers import ClosePacking
+from .utils import TempfileFromUrl
 
 
 class ExampleDataIsaacs:

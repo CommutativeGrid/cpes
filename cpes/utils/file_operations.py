@@ -7,8 +7,9 @@ Created on Tue Dec  7 14:01:04 2021
 """
 
 
-import requests
 import tempfile
+
+import requests
 
 
 class TempfileFromUrl:

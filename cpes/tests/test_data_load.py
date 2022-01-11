@@ -1,5 +1,6 @@
-from cpes.data_load import *
 import pytest
+
+from cpes.data_load import *
 
 # def test_fcc_au_cart_len_online():
 #         fcc_au_online = fcc_au_cart(mode="online")

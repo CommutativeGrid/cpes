@@ -5,15 +5,15 @@ Created on Wed Dec  1 15:58:28 2021
 
 @author: kasumi
 """
-from hexalattice.hexalattice import create_hex_grid
-from dataclasses import dataclass
+import os
+from math import sqrt
+
 import matplotlib.pyplot as plt
 import numpy as np
-from math import sqrt
+from hexalattice.hexalattice import create_hex_grid
 from scipy.spatial import distance
-import matplotlib.pyplot as plt
+
 from .aux_functions import *
-import os
 
 
 class Layer:

@@ -5,11 +5,13 @@ Created on Wed Nov 24 15:45:24 2021
 
 @author: kasumi
 """
-import numpy as np
 from math import sqrt
+
+import numpy as np
 from matplotlib import pyplot as plt
-from .cubic_crystal_systems import CrystalSystem, SimpleCubic, CrystalSystem
+
 from .aux_functions import *
+from .cubic_crystal_systems import CrystalSystem, SimpleCubic
 
 
 class FaceCenteredCubic(SimpleCubic):

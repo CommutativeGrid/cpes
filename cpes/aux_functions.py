@@ -5,13 +5,14 @@ Created on Wed Dec  8 18:19:56 2021
 
 @author: kasumi
 """
-import numpy as np
-from sklearn.metrics.pairwise import euclidean_distances
-from scipy.spatial.distance import euclidean
-from rdfpy import rdf
-import matplotlib.pyplot as plt
-from random import choice
 from operator import itemgetter
+from random import choice
+
+import matplotlib.pyplot as plt
+import numpy as np
+from rdfpy import rdf
+from scipy.spatial.distance import euclidean
+from sklearn.metrics.pairwise import euclidean_distances
 
 
 def distance_array(data, n=20):
