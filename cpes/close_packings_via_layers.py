@@ -25,7 +25,8 @@ class Layer:
     def __init__(self, nx, ny, type="A"):
         self.type = type  # A, B or C
         self.radius = 0.5  # default is 0.5
-        # Avoid Argument error in hex_grid: nx, ny and n are expected to be int type, instead of np.int64 or np.int32
+        # Avoid Argument error in hex_grid: 
+        # nx, ny and n are expected to be int type, instead of np.int64 or np.int32
         self.nx = int(nx)
         self.ny = int(ny)
         hex_centers, _ = create_hex_grid(nx=self.nx, ny=self.ny, do_plot=False)
@@ -76,7 +77,8 @@ class Points3d:
 
     def distance_array(self, n=20):
         """
-        Compute the distance to the k-th nearest neighbor for all atoms in the point cloud.
+        Compute the distance to the k-th nearest neighbor for 
+        all atoms in the point cloud.
         """
         return distance_array(self.data, n)
 
@@ -126,7 +128,8 @@ class ClosePacking(Points3d):
         print(f"Generating close packing with atom radius {self.radius}.")
         # self.diameter = 2*radius # diameter of the sphere, not the point cloud
         self.z_step = sqrt(6) / 3  # tranlsation amount in the vertical direction
-        # the default radius is 0.5, so we need to multiply by this to get the actual radius
+        # the default radius is 0.5, so we need to multiply by this to 
+        # get the actual radius
         self.multiplier = radius / 0.5
         # will create the default sized layers first
         super().__init__(data=np.empty((0, 3), float))

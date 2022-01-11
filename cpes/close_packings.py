@@ -8,7 +8,6 @@ Created on Wed Nov 24 15:45:24 2021
 from math import sqrt
 
 import numpy as np
-from matplotlib import pyplot as plt
 
 from .aux_functions import *
 from .cubic_crystal_systems import CrystalSystem, SimpleCubic
@@ -66,13 +65,13 @@ class HexagonalClosePacking(CrystalSystem):
     hexagonal close packing
     coordinates from wikipedia
     https://en.wikipedia.org/wiki/Close-packing_of_equal_spheres
-    
+
     multiplies of sqrt can cause errors. e.g.:
         a=sqrt(2e8)
         b=1e4*sqrt(2)
         print(f"{a:.20f}\n{b:.20f}")
     variable `a` will be closer to the real value.
-    
+
     see the following page for visualization
     http://lampx.tugraz.at/~hadley/ss1/crystalstructure/structures/hcp/hcp.php
     """
@@ -90,10 +89,11 @@ class HexagonalClosePacking(CrystalSystem):
                     self._unit_grid.append(
                         [
                             2 * x + (y + z) % 2,
-                            1
-                            + sqrt(
+                            1 + sqrt(
                                 3 * (temp * temp)
-                            ),  # include the parameter within the square root to increase precision
+                            ),
+                            # include the parameter within the square root
+                            # to increase precision
                             1 + 2 * sqrt(6 * z * z) / 3,
                         ]
                     )

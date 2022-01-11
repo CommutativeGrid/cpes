@@ -35,7 +35,7 @@ def rdf_plot(data, start=2, end=6, step=0.05, divided_by_2=True):
     """
     center = data[center_point_cloud(data)]
     print(f"center of the point cloud is {center}")
-    print(f"The point cloud shall be origin centered.")
+    print("The point cloud shall be origin centered.")
     points = data
     g_r, radii = rdf(points, dr=step)
     number_pts_per_unit = int(1 / step)
@@ -109,7 +109,7 @@ def atomic_packing_factor(data, radius=1):
 
 
 def thinning(data, survival_rate, style):
-    """delete points randomly from data. 
+    """delete points randomly from data.
 
     Parameters
     ----------
@@ -121,14 +121,19 @@ def thinning(data, survival_rate, style):
         the style of thinning. The default is 'homcloud'.
         'homcloud' : remained points will be labelled 0.
         'survived' : only returns the survived points.
-    The meaning of 間引き率 in the paper may lead different understandings 
-    (for example see table 1 in section 4 of 
-    [this](https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja) paper).
+    The meaning of 間引き率 in the paper may lead different understandings
+    (for example see table 1 in section 4 of the paper below:
+    https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja)
     """
-    l = len(data)
-    index_remained = np.random.choice(l, int(l * survival_rate), replace=False)
+    data_length = len(data)
+    index_remained = np.random.choice(
+        data_length, int(data_length * survival_rate), replace=False)
     if style == "homcloud":
-        label_rule = lambda i: 0 if i in index_remained else 1
+        def label_rule(i):
+            if i in index_remained:
+                return 0
+            else:
+                return 1
         labelled_data = [(label_rule(i), *vec) for i, vec in enumerate(data)]
         sorted_result = sorted(labelled_data, key=itemgetter(0))
         return (data[index_remained], sorted_result)

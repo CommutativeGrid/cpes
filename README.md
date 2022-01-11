@@ -39,15 +39,15 @@ Build a 10x10x10 hcp lattice, with sphere radius 1.0. Generated data is nearly c
 from cpes import FaceCenteredCubic, HexagonalClosePacking
 import numpy as np
 
-fcc=FaceCenteredCubic(10,radius=1.0) 
+fcc = FaceCenteredCubic(10, radius=1.0)
 
-print(fcc.data) # access the coordinates
-np.savetxt('fcc.xyz',fcc.data) # save the coordinates to a file
-coords=np.loadtxt('fcc.xyz') # load coordinates from a file
+print(fcc.data)  # access the coordinates
+np.savetxt('fcc.xyz', fcc.data)  # save the coordinates to a file
+coords = np.loadtxt('fcc.xyz')  # load coordinates from a file
 ```
 Execute a thinning process with survival rate 0.5, and save the file in accordan with the format of homcloud:
 ```python
-fcc.thinning(survival_rate=0.5,save=True,style='homcloud')
+fcc.thinning(survival_rate=0.5, save=True, style='homcloud')
 ```
 
 
@@ -58,15 +58,15 @@ Load the Cartesian coordinates of Au:
 ```python
 from cpes import FccAuCart
 
-fcc_au=FccAuCart(mode='online')
-fcc_au.original # access the original cartesian coordinates
-fcc_au.data # access the normalized coordinates (such that the sphere radius becomes 1.0)
+fcc_au = FccAuCart(mode='online')
+fcc_au.original  # access the original cartesian coordinates
+fcc_au.data  # access the normalized coordinates (sphere radius normalized to 1.0)
 ```
 
 Check that distance of the k-th nearest neighbor are the same for the generated data and the loaded data:
 
 ```python
-[i-j<1e-3 for i,j in zip(fcc_au.distance_array(),fcc_generated.distance_array())]
+[i - j < 1e-3 for i, j in zip(fcc_au.distance_array(), fcc.distance_array())]
 ```
 
 ## Methods
@@ -75,4 +75,3 @@ Check that distance of the k-th nearest neighbor are the same for the generated 
 * `.rdf_plot`: plot the radial distribution function. Notice that the implementation of this function is currently translation and orientation sensitive.
 * `.thinning`: compute the thinning of `self.data` with the provided `survival_rate`.
 * `.sphere_confine`: return the atoms within the given radius of the origin.
-
