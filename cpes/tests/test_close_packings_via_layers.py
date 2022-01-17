@@ -2,8 +2,8 @@ from cpes.close_packings_via_layers import *
 
 
 def test_Layer():
-    l = Layer(nx=3, ny=3, type="A")
-    assert len(l.coords) == 9
+    layer = Layer(nx=3, ny=3, type="A")
+    assert len(layer.coords) == 9
 
 
 def test_FaceCenteredCubic():
@@ -13,7 +13,9 @@ def test_FaceCenteredCubic():
 
 def test_HexagonalClosePacking():
     hcp = HexagonalClosePacking(num=5, radius=1, num_vector="auto")
-    # notice that the diagram in https://msestudent.com/wp-content/uploads/2021/02/OPT-HCP-coordination-number.svg
-    # is not correct. The distance between the first and the second atom is 2.828 instead of c=3.2659 when r=1.
+    # notice that the diagram in
+    # https://msestudent.com/wp-content/uploads/2021/02/OPT-HCP-coordination-number.svg
+    # is not correct. The distance between the first and the second atom is 2.828
+    # instead of c=3.2659 when r=1.
     # That distance can be realized by (0,0,0) and
     assert abs(hcp.distance_array()[2] - 2.828) < 0.001

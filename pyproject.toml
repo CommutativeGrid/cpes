@@ -7,7 +7,7 @@ exclude = ["example.py"]
 # make output nice
 format = "grouped"
 # 80 chars aren't enough in 21 century
-max_line_length = 90
+max_line_length = 100
 # show line of source code in output
 show_source = true
 
@@ -15,7 +15,8 @@ show_source = true
 [tool.flakehell.plugins]
 # include everything in pyflakes except F401
 # pyflakes = ["+*", "-F401"]
-pyflakes = ["+*", "-F405", "-F403"]
+pyflakes = ["+*", "-F405", "-F403", "-F401"]
+pycodestyle=["+*","-W503"]
 # enable only codes from S100 to S199
 flake8-bandit = ["-*", "+S1??"]
 # enable everything that starts from `flake8-`

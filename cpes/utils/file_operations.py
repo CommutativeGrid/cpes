@@ -8,7 +8,7 @@ Created on Tue Dec  7 14:01:04 2021
 
 
 import tempfile
-
+import os
 import requests
 
 
@@ -36,7 +36,8 @@ class TempfileFromUrl:
         self.file.close()
         try:
             os.remove(self.file.name)
-        except:
+        except BaseException as e:
+            print(e)
             pass
 
     def __exit__(self, exc_type, exc_value, traceback):
