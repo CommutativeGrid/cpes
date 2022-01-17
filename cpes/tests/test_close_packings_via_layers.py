@@ -2,8 +2,8 @@ from cpes.close_packings_via_layers import *
 
 
 def test_Layer():
-    l = Layer(nx=3, ny=3, type="A")
-    assert len(l.coords) == 9
+    layer = Layer(nx=3, ny=3, type="A")
+    assert len(layer.coords) == 9
 
 
 def test_FaceCenteredCubic():

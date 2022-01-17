@@ -86,11 +86,12 @@ class HcpRuFrac(ExampleDataIsaacs, ClosePacking):
         a = 43.29
         b = 43.29
         c = 68.5
-        alpha = np.pi / 2
-        beta = np.pi / 2
-        gamma = 2 * np.pi / 3
-        n2 = (np.cos(alpha) - np.cos(beta) * np.cos(gamma)) / np.sin(gamma)
-        # transformation matrix, see https://chemistry.stackexchange.com/questions/136836/converting-fractional-coordinates-into-cartesian-coordinates-for-crystallography
+        # alpha = np.pi / 2
+        # beta = np.pi / 2
+        # gamma = 2 * np.pi / 3
+        # n2 = (np.cos(alpha) - np.cos(beta) * np.cos(gamma)) / np.sin(gamma)
+        # transformation matrix, see
+        # https://chemistry.stackexchange.com/questions/136836/converting-fractional-coordinates-into-cartesian-coordinates-for-crystallography
         # M  = np.array([[a,0,0],
         #                [b*np.cos(gamma),b*np.sin(gamma),0],
         #      [c*np.cos(beta),c*n2,c*np.sqrt(np.sin(beta)**2-n2**2)]])
@@ -122,9 +123,9 @@ class FccSiFrac(ExampleDataIsaacs, ClosePacking):
         a = 32.52
         b = 32.52
         c = 32.52
-        alpha = np.pi / 2
-        beta = np.pi / 2
-        gamma = np.pi / 2
+        # alpha = np.pi / 2
+        # beta = np.pi / 2
+        # gamma = np.pi / 2
         M = np.array([[a, 0, 0], [0, b, 0], [0, 0, c]])
         self.cartesian = self.fractional @ M
         self.normalized = (
