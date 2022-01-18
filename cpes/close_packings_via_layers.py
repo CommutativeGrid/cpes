@@ -10,6 +10,8 @@ from math import sqrt
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import plotly.express as px
 from hexalattice.hexalattice import create_hex_grid
 from scipy.spatial import distance
 
@@ -38,19 +40,29 @@ class Layer:
         elif type == "C":
             # translation vector for layer of type C
             self.shift = np.array([1, sqrt(3) / 3])
-
+        self.type_vector = [type]*len(hex_centers)
         self.coords = hex_centers + self.shift  # shift the whole layer accordingly
 
 
 class Points3d:
     """
-    Basic class for 3d points
+    Basic class for 3d points, with color vector
     """
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, df=pd.DataFrame({'x' : [],'y' : [],'z' : [],'type' : []})):
+        self.df = df
+        self.data = df[['x','y','z']].values
+        self.coordinates=self.data
+        self.color_vector=pd.Series(df['type'])
 
-    def plot(self, alpha=0.8, size=400):
+    def plot(self):
+        df=self.df
+        df['c']=[ord(char) for char in a.df['type']]
+        fig = px.scatter_3d(a.df, x='x', y='y', z='z',
+                  color='c')
+        fig.show()
+
+    def plot_old(self, alpha=0.8, size=400):
         """plot spheres in 3d"""
         # fig=plt.figure(figsize=(10,10),dpi=100)
         fig = plt.figure()
@@ -70,7 +82,7 @@ class Points3d:
         return z
 
     def __len__(self):
-        return len(self.data)
+        return len(self.df)
 
     def __repr__(self) -> str:
         return self.data.__repr__()
@@ -118,6 +130,8 @@ class ClosePacking(Points3d):
             radius (float): radius of the sphere
             num_vector (np.array): will be (num,num,num) if not provided by the user.
         """
+        super().__init__(*args, **kwargs)
+        self.color_vector=[]
         self.num = num
         if num_vector == "auto":
             self.num_vector = np.array([num, num, num], dtype=int)
@@ -131,11 +145,9 @@ class ClosePacking(Points3d):
         # the default radius is 0.5, so we need to multiply by this to
         # get the actual radius
         self.multiplier = radius / 0.5
-        # will create the default sized layers first
-        super().__init__(data=np.empty((0, 3), float))
         self.thinning_history = []
 
-    def thinning(self, survival_rate, save=False, style="homcloud", replace=False):
+    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", replace=False):
         """delete points randomly from data.
 
         Parameters
@@ -152,9 +164,11 @@ class ClosePacking(Points3d):
             'survived' : only returns the survived points.
 
         """
-        (data, sorted_result) = thinning(self.data, survival_rate, style=style)
+        (df, sorted_result) = thinning(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style)
+        data=df.iloc[:, [0,1,2]].values
         if replace:
             self.data = data
+            self.df = df
             self.thinning_history.append(survival_rate)
         if style == "homcloud":
             if save:
@@ -188,7 +202,7 @@ class ClosePacking(Points3d):
                     np.savetxt(file_path, data, delimiter=" ")
                     print(f"File saved @ {file_path}.")
             else:
-                return Points3d(data)
+                return Points3d(df)
         else:
             raise NotImplementedError()
 
@@ -232,21 +246,23 @@ class FaceCenteredCubic(ClosePacking):
                 self.data = np.append(
                     self.data, self.lift(layer_A, i * self.z_step), axis=0
                 )
+                self.color_vector.extend(layer_A.type_vector)
             elif i % 3 == 1:
                 self.data = np.append(
                     self.data, self.lift(layer_B, i * self.z_step), axis=0
                 )
+                self.color_vector.extend(layer_B.type_vector)
             elif i % 3 == 2:
                 self.data = np.append(
                     self.data, self.lift(layer_C, i * self.z_step), axis=0
                 )
+                self.color_vector.extend(layer_C.type_vector)
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
-        self.shift_z = self.translation[
-            2
-        ]  # used in color_map to modify the color accordingly
+        self.shift_z = self.translation[2]  # used in color_map to modify the color accordingly
         # self.data=np.around(self.data,decimals=7)
+        self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbtation()
@@ -273,17 +289,18 @@ class HexagonalClosePacking(ClosePacking):
                 self.data = np.append(
                     self.data, self.lift(layer_A, i * self.z_step), axis=0
                 )
+                self.color_vector.extend(layer_A.type_vector)
             elif i % 2 == 1:
                 self.data = np.append(
                     self.data, self.lift(layer_B, i * self.z_step), axis=0
                 )
+                self.color_vector.extend(layer_B.type_vector)
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
-        self.shift_z = self.translation[
-            2
-        ]  # used in color_map to modify the color accordingly
+        self.shift_z = self.translation[2]  # used in color_map to modify the color accordingly
         # self.data=np.around(self.data,decimals=7)
+        self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbtation()
