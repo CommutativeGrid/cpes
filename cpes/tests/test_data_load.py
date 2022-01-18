@@ -11,7 +11,6 @@ from cpes.data_load import *
 #         fcc_au_offline = fcc_au_cart(mode='offline')
 #         assert (len(fcc_au_offline.normalized) >= 4000)
 
-
 @pytest.mark.data_download
 @pytest.mark.parametrize("mode", ["online", "offline"])
 def test_FccAuCart(mode):
