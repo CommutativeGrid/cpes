@@ -85,7 +85,10 @@ class Points3d:
         return len(self.df)
 
     def __repr__(self) -> str:
-        return self.data.__repr__()
+        """Display head of self.data if length too large"""
+        if len(self.data) > 10:
+            return str(self.data[:4])[:-1]+"\n...,\n...,\n"+str(self.data[-4:])[1:]
+        #return self.data.__repr__()
 
     def distance_array(self, n=20):
         """
@@ -147,7 +150,7 @@ class ClosePacking(Points3d):
         self.multiplier = radius / 0.5
         self.thinning_history = []
 
-    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", replace=False):
+    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False):
         """delete points randomly from data.
 
         Parameters
@@ -166,7 +169,7 @@ class ClosePacking(Points3d):
         """
         (df, sorted_result) = thinning(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style)
         data=df.iloc[:, [0,1,2]].values
-        if replace:
+        if inplace:
             self.data = data
             self.df = df
             self.thinning_history.append(survival_rate)
