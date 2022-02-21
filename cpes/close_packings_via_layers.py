@@ -7,15 +7,13 @@ Created on Wed Dec  1 15:58:28 2021
 """
 import os
 from math import sqrt
-
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import plotly.express as px
 from hexalattice.hexalattice import create_hex_grid
-from scipy.spatial import distance
 
-from .aux_functions import *
+
+from .utils import *
+from .points3d import Points3d
 
 
 class Layer:
@@ -42,86 +40,21 @@ class Layer:
             self.shift = np.array([1, sqrt(3) / 3])
         self.type_vector = [type]*len(hex_centers)
         self.coords = hex_centers + self.shift  # shift the whole layer accordingly
+        self.coords = np.array([[x,y,0.0] for x,y in self.coords])#embed the layer in a 3d space
 
-
-class Points3d:
-    """
-    Basic class for 3d points, with color vector
-    """
-
-    def __init__(self, df=pd.DataFrame({'x' : [],'y' : [],'z' : [],'type' : []})):
-        self.df = df
-        self.data = df[['x','y','z']].values
-        self.coordinates=self.data
-        self.color_vector=pd.Series(df['type'])
-
-    def plot(self):
-        df=self.df
-        df['c']=[ord(char) for char in a.df['type']]
-        fig = px.scatter_3d(a.df, x='x', y='y', z='z',
-                  color='c')
-        fig.show()
-
-    def plot_old(self, alpha=0.8, size=400):
-        """plot spheres in 3d"""
-        # fig=plt.figure(figsize=(10,10),dpi=100)
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection="3d")
-        color_vector = [self.color_map(*vec) for vec in self.data]
-        ax.scatter(
-            self.data[:, 0],
-            self.data[:, 1],
-            self.data[:, 2],
-            alpha=alpha,
-            s=size,
-            c=color_vector,
-        )
-
-    def color_map(self, x, y, z) -> float:
-        """function used for assigning different colors for different types of atoms."""
-        return z
-
-    def __len__(self):
-        return len(self.df)
-
-    def __repr__(self) -> str:
-        """Display head of self.data if length too large"""
-        if len(self.data) > 10:
-            return str(self.data[:4])[:-1]+"\n...,\n...,\n"+str(self.data[-4:])[1:]
-        #return self.data.__repr__()
-
-    def distance_array(self, n=20):
-        """
-        Compute the distance to the k-th nearest neighbor for
-        all atoms in the point cloud.
-        """
-        return distance_array(self.data, n)
-
-    def sphere_confine(self, radius):
-        return Points3d(sphere_confine(self.data, radius))
-
+        
+    
     @property
-    def diameter(self):
-        """
-        returns the diameter of the point cloud
-        """
-        if hasattr(self, "_diameter"):
-            return self._diameter
-        else:
-            self._diameter = max(
-                distance.cdist(self.data, self.data, "euclidean").flatten()
-            )
-            return self._diameter
+    def df(self):
+        return pd.DataFrame({"x": self.coords[:, 0], "y": self.coords[:, 1], 
+                            "z": self.coords[:, 2], "type": self.type_vector})
 
-    def add_perturbtation(self):
+    def lift(self, raise_z):
         """
-        add perturbation to the point cloud
+        lift a layer of atoms represented by a 2d numpy array
         """
-        mean = 0
-        sigma = 1e-4
-        flattened = self.data.flatten()
-        flattened_perturbed = flattened + np.random.normal(mean, sigma, len(flattened))
-        self.data = flattened_perturbed.reshape(self.data.shape)
+        self.coords = np.array([[x, y, raise_z] for x, y, _ in self.coords])
+    
 
 
 class ClosePacking(Points3d):
@@ -134,7 +67,6 @@ class ClosePacking(Points3d):
             num_vector (np.array): will be (num,num,num) if not provided by the user.
         """
         super().__init__(*args, **kwargs)
-        self.color_vector=[]
         self.num = num
         if num_vector == "auto":
             self.num_vector = np.array([num, num, num], dtype=int)
@@ -209,13 +141,6 @@ class ClosePacking(Points3d):
         else:
             raise NotImplementedError()
 
-    @staticmethod
-    def lift(layer, z):
-        """
-        lift a layer of atoms represented by a 2d numpy array
-        """
-        return np.array([[x, y, z] for x, y in layer.coords])
-
     def rdf_plot(self, start=2, end=6, step=0.01, divided_by_2=True):
         return rdf_plot(self.data, start, end, step, divided_by_2)
 
@@ -246,26 +171,18 @@ class FaceCenteredCubic(ClosePacking):
         layer_C = Layer(nx=nx, ny=ny, type="C")
         for i in range(nz):
             if i % 3 == 0:
-                self.data = np.append(
-                    self.data, self.lift(layer_A, i * self.z_step), axis=0
-                )
-                self.color_vector.extend(layer_A.type_vector)
+                layer_A.lift(i * self.z_step)
+                self.df=self.df.append(layer_A.df)
             elif i % 3 == 1:
-                self.data = np.append(
-                    self.data, self.lift(layer_B, i * self.z_step), axis=0
-                )
-                self.color_vector.extend(layer_B.type_vector)
+                layer_B.lift(i * self.z_step)
+                self.df=self.df.append(layer_B.df)
             elif i % 3 == 2:
-                self.data = np.append(
-                    self.data, self.lift(layer_C, i * self.z_step), axis=0
-                )
-                self.color_vector.extend(layer_C.type_vector)
+                layer_C.lift(i * self.z_step)
+                self.df=self.df.append(layer_C.df)
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
         self.shift_z = self.translation[2]  # used in color_map to modify the color accordingly
-        # self.data=np.around(self.data,decimals=7)
-        self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbtation()
@@ -289,15 +206,11 @@ class HexagonalClosePacking(ClosePacking):
         layer_B = Layer(nx=nx, ny=ny, type="B")
         for i in range(nz):
             if i % 2 == 0:
-                self.data = np.append(
-                    self.data, self.lift(layer_A, i * self.z_step), axis=0
-                )
-                self.color_vector.extend(layer_A.type_vector)
+                layer_A.lift(i * self.z_step)
+                self.df=self.df.append(layer_A.df)
             elif i % 2 == 1:
-                self.data = np.append(
-                    self.data, self.lift(layer_B, i * self.z_step), axis=0
-                )
-                self.color_vector.extend(layer_B.type_vector)
+                layer_B.lift(i * self.z_step)
+                self.df=self.df.append(layer_B.df)
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud

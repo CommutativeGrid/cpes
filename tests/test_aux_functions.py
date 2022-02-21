@@ -1,6 +1,6 @@
 import numpy as np
 
-from cpes.aux_functions import *
+from cpes.utils import *
 
 
 def test_distance_array():

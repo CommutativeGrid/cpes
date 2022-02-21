@@ -24,11 +24,13 @@ CLASSIFIERS = [
 
 INSTALL_REQUIRES = [
     "numpy",
+    "pandas",
     "sklearn",
     "rdfpy",
     "matplotlib",
     "hexalattice",
     "requests",
+    "plotly",
 ]
 
 setup(
