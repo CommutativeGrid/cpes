@@ -14,7 +14,7 @@ from matplotlib.colors import ListedColormap
 
 
 from .utils import *
-from .points3d import Points3d
+from .points3d import Points3D
 
 
 class Layer:
@@ -58,7 +58,7 @@ class Layer:
     
 
 
-class ClosePacking(Points3d):
+class ClosePacking(Points3D):
     def __init__(self, num, radius, num_vector, *args, **kwargs):
         """a class with support methods for close packings
 
@@ -138,12 +138,9 @@ class ClosePacking(Points3d):
                     np.savetxt(file_path, data, delimiter=" ")
                     print(f"File saved @ {file_path}.")
             else:
-                return Points3d(df)
+                return Points3D(df)
         else:
             raise NotImplementedError()
-
-    def rdf_plot(self, start=2, end=6, step=0.01, divided_by_2=True):
-        return rdf_plot(self.data, start, end, step, divided_by_2)
 
     def coordination_number(self):
         """
@@ -184,9 +181,10 @@ class FaceCenteredCubic(ClosePacking):
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
         self.set_palette()
+        self.df.reset_index(drop=True,inplace=True)
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
-            self.add_perturbtation()
+            self.add_perturbation()
         
 
     def set_palette(self):
@@ -227,6 +225,7 @@ class HexagonalClosePacking(ClosePacking):
         self.data = self.data - self.translation  # centralize the point cloud
         self.set_palette()
         self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
+        self.df.reset_index(drop=True,inplace=True)
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbtation()

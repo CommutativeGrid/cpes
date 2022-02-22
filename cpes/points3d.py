@@ -3,13 +3,14 @@ import pandas as pd
 import plotly.express as px
 from .utils import *
 from scipy.spatial import distance
+from sklearn.metrics.pairwise import euclidean_distances
 from matplotlib.colors import ListedColormap
 import pyvista
 
 
-class Points3d:
+class Points3D:
     """
-    Basic class for 3d points, with color vector
+    Basic class for 3D points, with color vector
     """
 
     def __init__(self, df=pd.DataFrame({'x' : [],'y' : [],'z' : [],'type' : []})):
@@ -39,6 +40,23 @@ class Points3d:
     def color_vector(self,new_colors):
         self.df.iloc[:,4]=new_colors
 
+    def random_delete(self,deletion_rate,inplace=False):
+        num_remained=int((1-deletion_rate)*(len(self.df)))
+        survivors=np.random.choice(range(len(self.df)),num_remained,replace=False)
+        if inplace is True:
+            self.df=self.df.iloc[survivors,:].copy()
+        else:
+            return Points3D(self.df.iloc[survivors,:])
+    
+    
+    def normalise(self):
+        """
+        Rescale the coordinates such that minimum distance becomes 2"""
+        dmat=euclidean_distances(self.data)
+        inter_dist=set(np.round(dmat.flatten(),6))
+        second_smallest=(list(inter_dist))[1]
+        self.data=self.data/(second_smallest/2)
+
     def origin_centered(self):
         """
         Test if the mass center is at the origin
@@ -58,16 +76,19 @@ class Points3d:
         pdata['orig_sphere'] = np.arange(len(self.xyz))
         # create many spheres from the point cloud
         sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
-        #https://docs.pyvista.org/api/utilities/_autosummary/pyvista.Sphere.html
         pc = pdata.glyph(scale=False, geom=sphere)
-        pc.plot(cmap=self.color_map(),jupyter_backend=backend)
-        print("Colors of boundary points might not be correct due to a bug of pyvista.")
-        # hcp=HCP(9)
-        # hcp.df=hcp.df.iloc[242:265]#change 265 to 263,264 to see the difference
-        # hcp.plot_pyvista(backend='panel')
+        
+        # pc.plot(cmap=self.color_map(),jupyter_backend=backend)
+        # pyvista.set_plot_theme("document")
+        # print("Colors of boundary points might not be correct due to a potential bug of pyvista.")
+        
+        plotter=pyvista.Plotter()
+        plotter.add_mesh(pc,cmap=self.color_map())
+        plotter.set_background("royalblue", top="aliceblue")
+        plotter.show()
 
     @staticmethod
-    def random_color(alpha=1):
+    def _random_color(alpha=1):
         """return a random rgba color vector"""
         if isinstance(alpha,int) or isinstance(alpha,float):
             rgb=np.random.choice(range(256), size=3)/255
@@ -81,8 +102,9 @@ class Points3d:
         """function used for assigning different colors for different types of atoms."""
         point_types=list(set(self.color_vector))
         if not hasattr(self,"palette"):
+            palette=[]
             for _ in point_types:
-                palette.append(self.random_color())
+                palette.append(self._random_color())
         else:
             palette=self.palette
         assert len(point_types)==len(palette)
@@ -102,8 +124,8 @@ class Points3d:
 
     def __repr__(self) -> str:
         """Display head of self.data if length too large"""
-        #return f"Points3d object of length {len(self.df)}:\n{str(self.data[:5])[:-1]}\n...]"
-        return f"Points3d object of length {len(self.df)}:\n{self.df[:5]}\n..."
+        #return f"Points3D object of length {len(self.df)}:\n{str(self.data[:5])[:-1]}\n...]"
+        return f"Points3D object of length {len(self.df)}:\n{self.df[:5]}\n..."
         # if len(self.data) > 10:
         #     return str(self.data[:4])[:-1]+"\n...,\n...,\n"+str(self.data[-4:])[1:]
         # #return self.data.__repr__()
@@ -116,7 +138,7 @@ class Points3d:
         return distance_array(self.data, n)
 
     def sphere_confine(self, radius):
-        return Points3d(sphere_confine(self.data, radius))
+        return Points3D(sphere_confine(self.data, radius))
 
     @property
     def diameter(self):
@@ -131,7 +153,12 @@ class Points3d:
             )
             return self._diameter
 
-    def add_perturbtation(self):
+    def rdf_plot(self, start=None, end=6, step=0.01, divided_by_2=True):
+        if start is None:
+            start=self.distance_array(n=3)[1]*0.9
+        return rdf_plot(self.data, start, end, step, divided_by_2)
+
+    def add_perturbation(self):
         """
         add perturbation to the point cloud
         """

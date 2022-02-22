@@ -39,14 +39,16 @@ def rdf_plot(data, start=2, end=6, step=0.05, divided_by_2=True):
     points = data
     g_r, radii = rdf(points, dr=step)
     number_pts_per_unit = int(1 / step)
-    index_left = max(0, start * number_pts_per_unit - 5)
+    index_left = max(0, int(start * number_pts_per_unit) - 5)
     index_right = number_pts_per_unit * end + 5
     x_coords = radii[index_left:index_right]
     y_coords = g_r[index_left:index_right]
     if divided_by_2:
         x_coords /= 2
+    plt.figure()
     plt.plot(x_coords, y_coords)
-    return x_coords, y_coords
+    plt.show()
+    return [i for i,j in zip(x_coords, y_coords) if j!=0]
 
 
 def coordination_number(data, crictical_value, anchor="random"):
