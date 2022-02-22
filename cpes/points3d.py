@@ -3,7 +3,8 @@ import pandas as pd
 import plotly.express as px
 from .utils import *
 from scipy.spatial import distance
-
+from matplotlib.colors import ListedColormap
+import pyvista
 
 
 class Points3d:
@@ -13,7 +14,6 @@ class Points3d:
 
     def __init__(self, df=pd.DataFrame({'x' : [],'y' : [],'z' : [],'type' : []})):
         self.df = df
-        #self.color_vector=pd.Series(df['type'])
 
     @property
     def xyz(self):
@@ -39,41 +39,74 @@ class Points3d:
     def color_vector(self,new_colors):
         self.df.iloc[:,4]=new_colors
 
-    def plot(self):
+    def origin_centered(self):
+        """
+        Test if the mass center is at the origin
+        """
+        return np.allclose(self.data[center_point_cloud(self.data)], np.zeros(3))
+        #return np.linalg.norm(self.data[center_point_cloud(self.data)])<1e-5
+
+    def plot(self):# plot_plotly
         df=self.df
         df['c']=[ord(char) for char in self.df['type']]
         fig = px.scatter_3d(df, x='x', y='y', z='z',
                   color='c')
         fig.show()
 
-    def plot_legacy(self, alpha=0.8, size=400):
-        import matplotlib.pyplot as plt
-        """plot spheres in 3d"""
-        # fig=plt.figure(figsize=(10,10),dpi=100)
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection="3d")
-        color_vector = [self.color_map(*vec) for vec in self.data]
-        ax.scatter(
-            self.data[:, 0],
-            self.data[:, 1],
-            self.data[:, 2],
-            alpha=alpha,
-            s=size,
-            c=color_vector,
-        )
+    def plot_pyvista(self,backend='pythreejs'):
+        pdata = pyvista.PolyData(self.xyz)
+        pdata['orig_sphere'] = np.arange(len(self.xyz))
+        # create many spheres from the point cloud
+        sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
+        #https://docs.pyvista.org/api/utilities/_autosummary/pyvista.Sphere.html
+        pc = pdata.glyph(scale=False, geom=sphere)
+        pc.plot(cmap=self.color_map(),jupyter_backend=backend)
+        print("Colors of boundary points might not be correct due to a bug of pyvista.")
+        # hcp=HCP(9)
+        # hcp.df=hcp.df.iloc[242:265]#change 265 to 263,264 to see the difference
+        # hcp.plot_pyvista(backend='panel')
 
-    def color_map(self, x, y, z) -> float:
+    @staticmethod
+    def random_color(alpha=1):
+        """return a random rgba color vector"""
+        if isinstance(alpha,int) or isinstance(alpha,float):
+            rgb=np.random.choice(range(256), size=3)/255
+            return np.append(rgb,alpha)
+        else:
+            rgb=np.random.choice(range(256), size=3)/255
+            return np.append(rgb,np.random.uniform())
+
+
+    def color_map(self):
         """function used for assigning different colors for different types of atoms."""
-        return z
+        point_types=list(set(self.color_vector))
+        if not hasattr(self,"palette"):
+            for _ in point_types:
+                palette.append(self.random_color())
+        else:
+            palette=self.palette
+        assert len(point_types)==len(palette)
+        def type2color(type):
+            return palette[point_types.index(type)]
+        self.df['color']=self.df['type'].apply(type2color)
+        return ListedColormap(self.df['color'].to_numpy())
+        # breakpoint()
+        # newcolors=np.empty((len(self.df),4))
+        # for t,c in zip(point_types,palette):
+        #     newcolors[self.df.type==t]=c
+        # # change to random colors
+        # return ListedColormap(newcolors)
 
     def __len__(self):
         return len(self.df)
 
     def __repr__(self) -> str:
         """Display head of self.data if length too large"""
-        if len(self.data) > 10:
-            return str(self.data[:4])[:-1]+"\n...,\n...,\n"+str(self.data[-4:])[1:]
-        #return self.data.__repr__()
+        #return f"Points3d object of length {len(self.df)}:\n{str(self.data[:5])[:-1]}\n...]"
+        return f"Points3d object of length {len(self.df)}:\n{self.df[:5]}\n..."
+        # if len(self.data) > 10:
+        #     return str(self.data[:4])[:-1]+"\n...,\n...,\n"+str(self.data[-4:])[1:]
+        # #return self.data.__repr__()
 
     def distance_array(self, n=20):
         """

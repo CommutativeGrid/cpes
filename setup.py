@@ -31,6 +31,9 @@ INSTALL_REQUIRES = [
     "hexalattice",
     "requests",
     "plotly",
+    "pyvista",
+    "pythreejs",
+    "panel"
 ]
 
 setup(

@@ -10,6 +10,7 @@ from math import sqrt
 import numpy as np
 import pandas as pd
 from hexalattice.hexalattice import create_hex_grid
+from matplotlib.colors import ListedColormap
 
 
 from .utils import *
@@ -182,16 +183,26 @@ class FaceCenteredCubic(ClosePacking):
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
-        self.shift_z = self.translation[2]  # used in color_map to modify the color accordingly
+        self.set_palette()
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbtation()
+        
 
-    def color_map(self, x, y, z):
+    def set_palette(self):
         """function used for assigning different colors for different types of atoms."""
-        # use np.around to avoid 0.9999999%1=0.99999 problem (expecting 0).
-        coeff = self.multiplier
-        return (np.around((z + self.shift_z) / sqrt(6), 2)) % coeff
+        red = np.array([1, 0, 0, 1])
+        yellow = np.array([255/256, 247/256, 0/256, 1])
+        blue = np.array([12/256, 238/256, 246/256, 1])
+        self.palette=[red,yellow,blue]
+        # newcolors=np.empty((len(self.df),4))
+        # newcolors[self.df.type=='A']=red
+        # newcolors[self.df.type=='B']=yellow
+        # newcolors[self.df.type=='C']=blue
+        # return ListedColormap(newcolors)
+
+
+
 
 
 class HexagonalClosePacking(ClosePacking):
@@ -214,14 +225,26 @@ class HexagonalClosePacking(ClosePacking):
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
-        self.shift_z = self.translation[2]  # used in color_map to modify the color accordingly
-        # self.data=np.around(self.data,decimals=7)
+        self.set_palette()
         self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbtation()
 
-    def color_map(self, x, y, z):
+    def set_palette(self):
         """function used for assigning different colors for different types of atoms."""
-        coeff = self.multiplier
-        return (np.around(1.5 * (z + self.shift_z) / sqrt(6), 2)) % coeff
+        red = np.array([1, 0, 0, 1])
+        yellow = np.array([255/256, 247/256, 0/256, 1])
+        blue = np.array([12/256, 238/256, 246/256, 1])
+        self.palette=[red,yellow]
+
+    # def color_map(self):
+    #     """function used for assigning different colors for different types of atoms."""
+    #     blue = np.array([12/256, 238/256, 246/256, 1])
+    #     yellow = np.array([255/256, 247/256, 0/256, 1])
+    #     red = np.array([1, 0, 0, 1])
+    #     newcolors=np.empty((len(self.df),4))
+    #     newcolors[self.df.type=='A']=red
+    #     newcolors[self.df.type=='B']=yellow
+    #     #newcolors[self.df.type=='C']=blue
+    #     return ListedColormap(newcolors)

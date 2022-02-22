@@ -29,6 +29,13 @@ pip install . --upgrade
 pip install -e .
 ```
 
+### Install jupyter extension (optional)
+
+If `pyvista` does not work properly in your notebook, try executing the following command:
+`jupyter labextension install @jupyter-widgets/jupyterlab-manager`
+
+([ref](https://github.com/pyvista/pyvista/issues/332))
+
 ## Basic usage
 
 ### Generate a fcc/hcp lattice layer by layer
