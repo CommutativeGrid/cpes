@@ -15,7 +15,7 @@ from ..points3d import Points3D
 import os
 
 
-def cif2df(filepath:str, supercell_str:str, translation=True, mode="crystal", **kwargs)->pd.DataFrame:
+def cif2df(filepath:str, supercell_str:str, origin_centered=True, mode="crystal", **kwargs)->pd.DataFrame:
     """chains the following tasks together:
     1.Receive user input about supercell size
     2.Execute the cif2cell command generated based on user input
@@ -43,7 +43,7 @@ def cif2df(filepath:str, supercell_str:str, translation=True, mode="crystal", **
                             '--program=xyz', f'--outputfile={f.name}'])
             df=pd.read_csv(f.name,skiprows=2,header=None,names=['type','x','y','z'],delim_whitespace=True)
     df=df.reindex(columns=['x','y','z','type'])
-    if translation is True:
+    if origin_centered is True:
         # move the center to the origin
         center_index=center_point_cloud(df.iloc[:,0:3])
         translated=df.iloc[:,0:3]-df.iloc[center_index,0:3]

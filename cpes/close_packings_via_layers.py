@@ -224,7 +224,7 @@ class HexagonalClosePacking(ClosePacking):
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
         self.set_palette()
-        self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
+        #self.df = pd.DataFrame({'x':self.data[:,0],'y':self.data[:,1],'z':self.data[:,2], 'type':self.color_vector},columns=['x','y','z','type'])
         self.df.reset_index(drop=True,inplace=True)
         if perturbation is True:
             print("Adding perturbation to the point cloud.")

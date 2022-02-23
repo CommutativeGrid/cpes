@@ -6,6 +6,7 @@ from scipy.spatial import distance
 from sklearn.metrics.pairwise import euclidean_distances
 from matplotlib.colors import ListedColormap
 import pyvista
+import os
 
 
 class Points3D:
@@ -18,29 +19,50 @@ class Points3D:
 
     @property
     def xyz(self):
-        return self.df.iloc[:, :3].to_numpy(dtype=float) # return xyz coordinates
+        """
+        Return the xyz coordinates
+        """
+        return self.df.iloc[:, :3].to_numpy(dtype=float)
     
     @property
     def data(self):
-        return self.df.iloc[:, :3].to_numpy(dtype=float) # return xyz coordinates
+        """
+        Return the xyz coordinates
+        """
+        return self.df.iloc[:, :3].to_numpy(dtype=float)
 
     @xyz.setter
     def xyz(self,xyz_coord):
+        """
+        Set the xyz coordinates
+        """
         self.df.iloc[:,:3]=xyz_coord
 
     @data.setter
     def data(self,xyz_coord):
+        """
+        Set the xyz coordinates
+        """
         self.df.iloc[:,:3]=xyz_coord
 
     @property
-    def color_vector(self):
+    def type_vector(self):
+        """
+        Return the type vector (atoms' type)
+        """
         return pd.Series(self.df['type'])
 
-    @color_vector.setter
-    def color_vector(self,new_colors):
+    @type_vector.setter
+    def type_vector(self,new_colors):
+        """
+        Set the type vector
+        """
         self.df.iloc[:,4]=new_colors
 
     def random_delete(self,deletion_rate,inplace=False):
+        """
+        Delete points randomly based on the given deletion_rate (0-1)
+        """
         num_remained=int((1-deletion_rate)*(len(self.df)))
         survivors=np.random.choice(range(len(self.df)),num_remained,replace=False)
         if inplace is True:
@@ -57,7 +79,7 @@ class Points3D:
         second_smallest=(list(inter_dist))[1]
         self.data=self.data/(second_smallest/2)
 
-    def origin_centered(self):
+    def is_originCentered(self):
         """
         Test if the mass center is at the origin
         TODO Rewrite this function, compare with the whole supercell
@@ -66,6 +88,11 @@ class Points3D:
         #return np.linalg.norm(self.data[center_point_cloud(self.data)])<1e-5
 
     def plot(self):# plot_plotly
+        if any('SPYDER' in name for name in os.environ):
+            print("Detected Spyder. Using pyvista insteat of plotly.")
+            self.plot_pyvista()
+        else:
+            pass
         df=self.df
         df['c']=[ord(char) for char in self.df['type']]
         fig = px.scatter_3d(df, x='x', y='y', z='z',
@@ -78,6 +105,7 @@ class Points3D:
         points are added to the plotter color by color
         otherwise the displayed colors will not all be correct
         """
+        #TODO add legend atom type-color
         plotter=pyvista.Plotter()
         sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
         self._add_color()
@@ -88,7 +116,7 @@ class Points3D:
             pdata = pyvista.PolyData(xyz)
             pdata['orig_sphere'] = np.arange(len(xyz))
             pc = pdata.glyph(scale=False, geom=sphere)
-            plotter.add_mesh(pc,cmap=color)
+            plotter.add_mesh(pc,cmap=color,show_scalar_bar=False)
         plotter.set_background("royalblue", top="aliceblue")
         plotter.show()
         
@@ -119,7 +147,7 @@ class Points3D:
         """
         Add a color column to the dataframe
         """
-        point_types=list(set(self.color_vector))
+        point_types=list(set(self.type_vector))
         if not hasattr(self,"palette"):
             palette=[]
             for _ in point_types:
