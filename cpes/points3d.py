@@ -60,6 +60,7 @@ class Points3D:
     def origin_centered(self):
         """
         Test if the mass center is at the origin
+        TODO Rewrite this function, compare with the whole supercell
         """
         return np.allclose(self.data[center_point_cloud(self.data)], np.zeros(3))
         #return np.linalg.norm(self.data[center_point_cloud(self.data)])<1e-5
@@ -72,20 +73,36 @@ class Points3D:
         fig.show()
 
     def plot_pyvista(self,backend='pythreejs'):
-        pdata = pyvista.PolyData(self.xyz)
-        pdata['orig_sphere'] = np.arange(len(self.xyz))
-        # create many spheres from the point cloud
+        """
+        Plot the point cloud using pyvista
+        points are added to the plotter color by color
+        otherwise the displayed colors will not all be correct
+        """
+        plotter=pyvista.Plotter()
         sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
-        pc = pdata.glyph(scale=False, geom=sphere)
+        self._add_color()
+        for t in set(self.df.type):
+            typedf=self.df[self.df.type==t]
+            xyz=typedf.loc[:,['x','y','z']].to_numpy(dtype=float)
+            color=ListedColormap(typedf['color'].to_numpy())
+            pdata = pyvista.PolyData(xyz)
+            pdata['orig_sphere'] = np.arange(len(xyz))
+            pc = pdata.glyph(scale=False, geom=sphere)
+            plotter.add_mesh(pc,cmap=color)
+        plotter.set_background("royalblue", top="aliceblue")
+        plotter.show()
         
+        # pdata = pyvista.PolyData(self.xyz)
+        # pdata['orig_sphere'] = np.arange(len(self.xyz))
+        # # create many spheres from the point cloud
+        # sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
+        # pc = pdata.glyph(scale=False, geom=sphere)
         # pc.plot(cmap=self.color_map(),jupyter_backend=backend)
         # pyvista.set_plot_theme("document")
         # print("Colors of boundary points might not be correct due to a potential bug of pyvista.")
-        
-        plotter=pyvista.Plotter()
-        plotter.add_mesh(pc,cmap=self.color_map())
-        plotter.set_background("royalblue", top="aliceblue")
-        plotter.show()
+        # plotter.add_mesh(pc,cmap=self.color_map())
+        # plotter.set_background("royalblue", top="aliceblue")
+        # plotter.show()
 
     @staticmethod
     def _random_color(alpha=1):
@@ -98,8 +115,10 @@ class Points3D:
             return np.append(rgb,np.random.uniform())
 
 
-    def color_map(self):
-        """function used for assigning different colors for different types of atoms."""
+    def _add_color(self):
+        """
+        Add a color column to the dataframe
+        """
         point_types=list(set(self.color_vector))
         if not hasattr(self,"palette"):
             palette=[]
@@ -111,7 +130,7 @@ class Points3D:
         def type2color(type):
             return palette[point_types.index(type)]
         self.df['color']=self.df['type'].apply(type2color)
-        return ListedColormap(self.df['color'].to_numpy())
+        #return ListedColormap(self.df['color'].to_numpy())
         # breakpoint()
         # newcolors=np.empty((len(self.df),4))
         # for t,c in zip(point_types,palette):
