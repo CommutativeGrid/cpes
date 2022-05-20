@@ -33,7 +33,8 @@ INSTALL_REQUIRES = [
     "plotly",
     "pyvista",
     "pythreejs",
-    "panel"
+    "panel",
+    "crystals",
 ]
 
 setup(

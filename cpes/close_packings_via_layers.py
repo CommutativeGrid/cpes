@@ -228,7 +228,7 @@ class HexagonalClosePacking(ClosePacking):
         self.df.reset_index(drop=True,inplace=True)
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
-            self.add_perturbtation()
+            self.add_perturbation()
 
     def set_palette(self):
         """function used for assigning different colors for different types of atoms."""
