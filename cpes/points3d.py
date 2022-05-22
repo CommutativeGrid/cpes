@@ -15,7 +15,17 @@ class Points3D:
     """
 
     def __init__(self, df=pd.DataFrame({'x' : [],'y' : [],'z' : [],'type' : []})):
-        self.df = df
+        #breakpoint()
+        if type(df) is pd.DataFrame:
+            self.df=df
+        elif type(df) is np.ndarray:
+            self.df=pd.DataFrame(df)
+        else:
+            raise NotImplementedError("Data type not supported")
+        # embed into z=0 plane if a 2d point cloud
+        if len(self.df.columns)<2:
+            self.df['z']=0
+            print("Warning: embedding into z=0 plane")
 
     @property
     def xyz(self):
@@ -214,3 +224,73 @@ class Points3D:
         flattened = self.data.flatten()
         flattened_perturbed = flattened + np.random.normal(mean, sigma, len(flattened))
         self.data = flattened_perturbed.reshape(self.data.shape)
+
+    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False):
+        """delete points randomly from data.
+
+        Parameters
+        ----------
+        data : ndarray
+            the data to be thinned
+        save : bool, optional
+            whether to save the thinned data to a file, by default False
+        survival_rate : float
+            percentage of points to survive
+        style : str, optional
+            the style of thinning. The default is 'homcloud'.
+            'homcloud' : remained points will be labelled 0.
+            'survived' : only returns the survived points.
+
+        """
+        (df, sorted_result) = thinning_aux(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style)
+        data=df.iloc[:, [0,1,2]].values
+        num=len(self)
+        if inplace:
+            self.data = data
+            self.df = df
+            self.thinning_history.append(survival_rate)
+        if style == "homcloud":
+            if save:
+                cwd = os.getcwd()
+                file_name = (
+                    f"{type(self).__name__}_{num}_{survival_rate}_thinned.out"
+                )
+                file_path = os.path.join(cwd, file_name)
+                if os.path.isfile(file_path):
+                    raise FileExistsError(f"File {file_path} already exists.")
+                else:
+                    np.savetxt(
+                        file_path,
+                        sorted_result,
+                        fmt=["%d"] + ["%.6f"] * 3,
+                        delimiter=" ",
+                    )
+                    #remove the trailing newline
+                    with open(file_path) as f_input:
+                        data = f_input.read().rstrip('\n')
+                    with open(file_path, 'w') as f_output:    
+                        f_output.write(data)
+                    print(f"File saved @ {file_path} in homcloud format.")
+            else:
+                return sorted_result
+        elif style == "survived":
+            # sorted_result is None
+            if save:
+                file_name = (
+                    f"{type(self).__name__}_{num}_{survival_rate}_thinned.out"
+                )
+                file_path = os.path.join(cwd, file_name)
+                if os.path.isfile(file_path):
+                    raise FileExistsError(f"File {file_path} already exists.")
+                else:
+                    np.savetxt(file_path, data, delimiter=" ")
+                    #remove the trailing newline
+                    with open(file_path) as f_input:
+                        data = f_input.read().rstrip('\n')
+                    with open(file_path, 'w') as f_output:    
+                        f_output.write(data)
+                    print(f"File saved @ {file_path}.")
+            else:
+                return Points3D(df)
+        else:
+            raise NotImplementedError()

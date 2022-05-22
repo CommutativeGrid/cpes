@@ -110,7 +110,7 @@ def atomic_packing_factor(data, radius=1):
     return occupied / total
 
 
-def thinning(df, survival_rate, number_removal=None, style="homcloud"):
+def thinning_aux(df, survival_rate, number_removal=None, style="homcloud"):
     """delete points randomly from data.
 
     Parameters

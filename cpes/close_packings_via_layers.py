@@ -83,64 +83,64 @@ class ClosePacking(Points3D):
         self.multiplier = radius / 0.5
         self.thinning_history = []
 
-    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False):
-        """delete points randomly from data.
+    # def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False):
+    #     """delete points randomly from data.
 
-        Parameters
-        ----------
-        data : ndarray
-            the data to be thinned
-        save : bool, optional
-            whether to save the thinned data to a file, by default False
-        survival_rate : float
-            percentage of points to survive
-        style : str, optional
-            the style of thinning. The default is 'homcloud'.
-            'homcloud' : remained points will be labelled 0.
-            'survived' : only returns the survived points.
+    #     Parameters
+    #     ----------
+    #     data : ndarray
+    #         the data to be thinned
+    #     save : bool, optional
+    #         whether to save the thinned data to a file, by default False
+    #     survival_rate : float
+    #         percentage of points to survive
+    #     style : str, optional
+    #         the style of thinning. The default is 'homcloud'.
+    #         'homcloud' : remained points will be labelled 0.
+    #         'survived' : only returns the survived points.
 
-        """
-        (df, sorted_result) = thinning(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style)
-        data=df.iloc[:, [0,1,2]].values
-        if inplace:
-            self.data = data
-            self.df = df
-            self.thinning_history.append(survival_rate)
-        if style == "homcloud":
-            if save:
-                cwd = os.getcwd()
-                file_name = (
-                    f"{type(self).__name__}_{self.num}_{survival_rate}_thinned.out"
-                )
-                file_path = os.path.join(cwd, file_name)
-                if os.path.isfile(file_path):
-                    raise FileExistsError(f"File {file_path} already exists.")
-                else:
-                    np.savetxt(
-                        file_path,
-                        sorted_result,
-                        fmt=["%d"] + ["%.6f"] * 3,
-                        delimiter=" ",
-                    )
-                    print(f"File saved @ {file_path} in homcloud format.")
-            else:
-                return sorted_result
-        elif style == "survived":
-            # sorted_result is None
-            if save:
-                file_name = (
-                    f"{type(self).__name__}_{self.num}_{survival_rate}_thinned.out"
-                )
-                file_path = os.path.join(cwd, file_name)
-                if os.path.isfile(file_path):
-                    raise FileExistsError(f"File {file_path} already exists.")
-                else:
-                    np.savetxt(file_path, data, delimiter=" ")
-                    print(f"File saved @ {file_path}.")
-            else:
-                return Points3D(df)
-        else:
-            raise NotImplementedError()
+    #     """
+    #     (df, sorted_result) = thinning(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style)
+    #     data=df.iloc[:, [0,1,2]].values
+    #     if inplace:
+    #         self.data = data
+    #         self.df = df
+    #         self.thinning_history.append(survival_rate)
+    #     if style == "homcloud":
+    #         if save:
+    #             cwd = os.getcwd()
+    #             file_name = (
+    #                 f"{type(self).__name__}_{self.num}_{survival_rate}_thinned.out"
+    #             )
+    #             file_path = os.path.join(cwd, file_name)
+    #             if os.path.isfile(file_path):
+    #                 raise FileExistsError(f"File {file_path} already exists.")
+    #             else:
+    #                 np.savetxt(
+    #                     file_path,
+    #                     sorted_result,
+    #                     fmt=["%d"] + ["%.6f"] * 3,
+    #                     delimiter=" ",
+    #                 )
+    #                 print(f"File saved @ {file_path} in homcloud format.")
+    #         else:
+    #             return sorted_result
+    #     elif style == "survived":
+    #         # sorted_result is None
+    #         if save:
+    #             file_name = (
+    #                 f"{type(self).__name__}_{self.num}_{survival_rate}_thinned.out"
+    #             )
+    #             file_path = os.path.join(cwd, file_name)
+    #             if os.path.isfile(file_path):
+    #                 raise FileExistsError(f"File {file_path} already exists.")
+    #             else:
+    #                 np.savetxt(file_path, data, delimiter=" ")
+    #                 print(f"File saved @ {file_path}.")
+    #         else:
+    #             return Points3D(df)
+    #     else:
+    #         raise NotImplementedError()
 
     def coordination_number(self):
         """

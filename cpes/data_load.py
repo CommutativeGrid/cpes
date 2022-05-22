@@ -15,6 +15,7 @@ from tempfile import NamedTemporaryFile
 import numpy as np
 
 from .close_packings_via_layers import ClosePacking
+from .points3d import Points3D
 from .utils import TempfileFromUrl
 
 
@@ -48,14 +49,14 @@ class ExampleDataIsaacs:
         return len(self.original)
 
 
-class FccAuCart(ExampleDataIsaacs, ClosePacking):
+class FccAuCart(ExampleDataIsaacs, Points3D):
     def __init__(self, mode="offline"):
         url = "http://isaacs.sourceforge.net/tests/au-cart.xyz"
         dir_name = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(
             dir_name, "isaacs_data", "au-cart.xyz"
         )  # the last line is deleted from the downloaded original file
-        super().__init__(url, coord_type="cartesian", mode=mode, offline_fp=path)
+        ExampleDataIsaacs.__init__(self,url, coord_type="cartesian", mode=mode, offline_fp=path)
         self.cartesian = (
             self.original
         )  # the cartesian coordinates is the same as the original coordinates
@@ -63,6 +64,7 @@ class FccAuCart(ExampleDataIsaacs, ClosePacking):
             2 * self.cartesian / 2.877925
         )  # rescale to make the radius of the atom 1.0
         # notice that the lattice is not guaranteed to be centerd exactly at the origin
+        Points3D.__init__(self, self.normalized)
         self.data = self.normalized  # set self.data to be the normalized coordinates
         # now methods in close_packing can be used on self.data
 
@@ -77,7 +79,7 @@ class HcpRuFrac(ExampleDataIsaacs, ClosePacking):
         path = os.path.join(
             dir_name, "isaacs_data", "ru-frac.xyz"
         )  # the last line is deleted from the downloaded original file
-        super().__init__(url, coord_type="cartesian", mode=mode, offline_fp=path)
+        ExampleDataIsaacs.__init__(self,url, coord_type="cartesian", mode=mode, offline_fp=path)
         self.fractional = (
             self.original
         )  # the fractional coordinates is the same as the original coordinates
@@ -103,6 +105,7 @@ class HcpRuFrac(ExampleDataIsaacs, ClosePacking):
         self.normalized = (
             2 * self.cartesian / 5.29987615
         )  # rescale to make the radius of the atom 1.0
+        Points3D.__init__(self, self.normalized)
         self.data = self.normalized  # set self.data to be the normalized coordinates
         # now methods in close_packing can be used on self.data
 
@@ -114,7 +117,7 @@ class FccSiFrac(ExampleDataIsaacs, ClosePacking):
         path = os.path.join(
             dir_name, "isaacs_data", "si-frac.xyz"
         )  # the last line is deleted from the downloaded original file
-        super().__init__(url, coord_type="cartesian", mode=mode, offline_fp=path)
+        ExampleDataIsaacs.__init__(self,url, coord_type="cartesian", mode=mode, offline_fp=path)
         self.fractional = (
             self.original
         )  # the fractional coordinates is the same as the original coordinates
@@ -131,5 +134,6 @@ class FccSiFrac(ExampleDataIsaacs, ClosePacking):
         self.normalized = (
             2 * self.cartesian / 4.6939
         )  # rescale to make the radius of the atom 1
+        Points3D.__init__(self, self.normalized)
         self.data = self.normalized  # set self.data to be the normalized coordinates
         # now methods in ClosePacking can be used on self.data
