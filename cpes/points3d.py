@@ -248,7 +248,7 @@ class Points3D:
         if inplace:
             #self.data = data
             self.df = df
-            self.thinning_history.append(survival_rate)
+            self.thinning_history.append({"survival_rate":survival_rate, "number_removal":number_removal})
         if style == "homcloud":
             if save_path is not None:
                 #save is a file path

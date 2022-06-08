@@ -111,7 +111,7 @@ def atomic_packing_factor(data, radius=1):
     return occupied / total
 
 
-def thinning_aux(df, survival_rate, number_removal=None, style="homcloud", is_removable=None):
+def thinning_aux(df, survival_rate=None, number_removal=None, style="homcloud", is_removable=None):
     """delete points randomly from data.
 
     Parameters
@@ -130,6 +130,8 @@ def thinning_aux(df, survival_rate, number_removal=None, style="homcloud", is_re
     (for example see table 1 in section 4 of the paper below:
     https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja)
     """
+    assert number_removal is None or number_removal >=0
+    assert survival_rate is None or 0 <= survival_rate <= 1
     # generate the index list for random removal
     if is_removable is None:
         removable_index_list=list(df.index)
@@ -156,8 +158,8 @@ def thinning_aux(df, survival_rate, number_removal=None, style="homcloud", is_re
                 return 1
         labelled_data = [(label_rule(i), *vec) for i, vec in enumerate(df[['x', 'y', 'z']].values)]
         sorted_result = np.array(sorted(labelled_data, key=itemgetter(0)))
-        return (df.iloc[index_remained], sorted_result)
+        return (df.loc[index_remained], sorted_result)
     elif style == "survived":
-        return (df.iloc[index_remained], None)
+        return (df.loc[index_remained], None)
     else:
         raise NotImplementedError
