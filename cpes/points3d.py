@@ -225,7 +225,7 @@ class Points3D:
         flattened_perturbed = flattened + np.random.normal(mean, sigma, len(flattened))
         self.data = flattened_perturbed.reshape(self.data.shape)
 
-    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False):
+    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False, is_removable=None):
         """delete points randomly from data.
 
         Parameters
@@ -242,11 +242,11 @@ class Points3D:
             'survived' : only returns the survived points.
 
         """
-        (df, sorted_result) = thinning_aux(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style)
+        (df, sorted_result) = thinning_aux(self.df, survival_rate=survival_rate, number_removal=number_removal, style=style, is_removable=is_removable)
         data=df.iloc[:, [0,1,2]].values
         num=len(self)
         if inplace:
-            self.data = data
+            #self.data = data
             self.df = df
             self.thinning_history.append(survival_rate)
         if style == "homcloud":

@@ -10,6 +10,7 @@ from random import choice
 
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 from rdfpy import rdf
 from scipy.spatial.distance import euclidean
 from sklearn.metrics.pairwise import euclidean_distances
@@ -110,7 +111,7 @@ def atomic_packing_factor(data, radius=1):
     return occupied / total
 
 
-def thinning_aux(df, survival_rate, number_removal=None, style="homcloud"):
+def thinning_aux(df, survival_rate, number_removal=None, style="homcloud", is_removable=None):
     """delete points randomly from data.
 
     Parameters
@@ -123,16 +124,30 @@ def thinning_aux(df, survival_rate, number_removal=None, style="homcloud"):
         the style of thinning. The default is 'homcloud'.
         'homcloud' : remained points will be labelled 0.
         'survived' : only returns the survived points.
+    is_removable: str, optional
+        name of the column to be used as the removal criteria.
     The meaning of 間引き率 in the paper may lead different understandings
     (for example see table 1 in section 4 of the paper below:
     https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja)
     """
-    df_length = len(df)
+    # generate the index list for random removal
+    if is_removable is None:
+        removable_index_list=list(df.index)
+        nonremovable_index_list=[]
+    else:
+        if is_removable not in df.columns:
+            raise ValueError(f"{is_removable} is not in the dataframe")
+        removable_index_list = list(df.loc[df[is_removable]==True].index)
+        nonremovable_index_list = list(df.loc[df[is_removable]==False].index)
+
     if number_removal is None:
-        number_removal = int(df_length * (1 - survival_rate))
-    number_remained = df_length - number_removal
-    index_remained = np.random.choice(
-        df_length, number_remained, replace=False)
+        # number of points to be removed is calculated based on the total number of points
+        number_removal = int(len(df.index) * (1 - survival_rate)) 
+    number_remained = len(removable_index_list) - number_removal
+    removable_index_remained = random.sample(removable_index_list, number_remained) # sampling without duplicates
+    index_remained = [*removable_index_remained,*nonremovable_index_list]
+
+    #np.random.choice(df_length, number_remained, replace=False)
     if style == "homcloud":
         def label_rule(i):
             if i in index_remained:
@@ -141,8 +156,8 @@ def thinning_aux(df, survival_rate, number_removal=None, style="homcloud"):
                 return 1
         labelled_data = [(label_rule(i), *vec) for i, vec in enumerate(df[['x', 'y', 'z']].values)]
         sorted_result = np.array(sorted(labelled_data, key=itemgetter(0)))
-        return (df.iloc[index_remained,:], sorted_result)
+        return (df.iloc[index_remained], sorted_result)
     elif style == "survived":
-        return (df.iloc[index_remained,:], None)
+        return (df.iloc[index_remained], None)
     else:
         raise NotImplementedError

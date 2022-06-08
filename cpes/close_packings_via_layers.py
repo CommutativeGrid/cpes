@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from hexalattice.hexalattice import create_hex_grid
 from matplotlib.colors import ListedColormap
+from sklearn.metrics.pairwise import euclidean_distances
 
 
 from .utils import *
@@ -154,6 +155,30 @@ class ClosePacking(Points3D):
         """
         return atomic_packing_factor(self.data, self.radius)
 
+    def neighbours_counting(self,df):
+        """
+        Compute the number of neighbours for each point
+        and add that to the dataframe
+        """
+        # distance matrix
+        distance_matrix = euclidean_distances(df[["x","y","z"]])
+        # count the number of neighbours, minus one to remove itself
+        num_neighbours=[len([value for value in vector if value<2 * self.radius*1.001])-1 for vector in distance_matrix]
+        return df.assign(neighbours=num_neighbours)
+        #TODO
+        # render colors according to the number of neighbours
+        # then decide the value for thinning
+
+    def thinning(self, survival_rate=None, number_removal=None, save=False, style="survived", inplace=False, is_removable="is_interior"):
+        print("Only interior points are involved in the thinning process.")
+        return super().thinning(survival_rate=survival_rate, number_removal=number_removal, save=save, style=style, inplace=inplace, is_removable=is_removable)
+
+    def interiorPoints_count(self):
+        """
+        return the number of interior points
+        """
+        return len(self.df.loc[self.df["is_interior"] == True])
+
 
 class FaceCenteredCubic(ClosePacking):
     """
@@ -170,13 +195,16 @@ class FaceCenteredCubic(ClosePacking):
         for i in range(nz):
             if i % 3 == 0:
                 layer_A.lift(i * self.z_step)
-                self.df=self.df.append(layer_A.df)
+                self.df=pd.concat([self.df,layer_A.df])
+                #self.df=self.df.append(layer_A.df)
             elif i % 3 == 1:
                 layer_B.lift(i * self.z_step)
-                self.df=self.df.append(layer_B.df)
+                self.df=pd.concat([self.df,layer_B.df])
+                #self.df=self.df.append(layer_B.df)
             elif i % 3 == 2:
                 layer_C.lift(i * self.z_step)
-                self.df=self.df.append(layer_C.df)
+                self.df=pd.concat([self.df,layer_C.df])
+                #self.df=self.df.append(layer_C.df)
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
@@ -185,6 +213,8 @@ class FaceCenteredCubic(ClosePacking):
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbation()
+        self.df=self.neighbours_counting(self.df)
+        self.df=self.df.assign(is_interior=self.df["neighbours"]==12)
         
 
     def set_palette(self):
@@ -216,10 +246,12 @@ class HexagonalClosePacking(ClosePacking):
         for i in range(nz):
             if i % 2 == 0:
                 layer_A.lift(i * self.z_step)
-                self.df=self.df.append(layer_A.df)
+                self.df=pd.concat([self.df,layer_A.df])
+                #self.df=self.df.append(layer_A.df)
             elif i % 2 == 1:
                 layer_B.lift(i * self.z_step)
-                self.df=self.df.append(layer_B.df)
+                self.df=pd.concat([self.df,layer_B.df])
+                #self.df=self.df.append(layer_B.df)
         self.data *= self.multiplier
         self.translation = self.data[center_point_cloud(self.data)]
         self.data = self.data - self.translation  # centralize the point cloud
@@ -229,6 +261,8 @@ class HexagonalClosePacking(ClosePacking):
         if perturbation is True:
             print("Adding perturbation to the point cloud.")
             self.add_perturbation()
+        self.df=self.neighbours_counting(self.df)
+        self.df=self.df.assign(is_interior=self.df["neighbours"]==12)
 
     def set_palette(self):
         """function used for assigning different colors for different types of atoms."""
