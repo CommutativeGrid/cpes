@@ -225,7 +225,7 @@ class Points3D:
         flattened_perturbed = flattened + np.random.normal(mean, sigma, len(flattened))
         self.data = flattened_perturbed.reshape(self.data.shape)
 
-    def thinning(self, survival_rate=None, number_removal=None, save=False, style="homcloud", inplace=False, is_removable=None):
+    def thinning(self, survival_rate=None, number_removal=None, save_path=None, style="homcloud", inplace=False, is_removable=None):
         """delete points randomly from data.
 
         Parameters
@@ -250,46 +250,42 @@ class Points3D:
             self.df = df
             self.thinning_history.append(survival_rate)
         if style == "homcloud":
-            if save:
-                cwd = os.getcwd()
-                file_name = (
-                    f"{type(self).__name__}_{num}_{survival_rate}_thinned.out"
+            if save_path is not None:
+                #save is a file path
+                # cwd = os.getcwd()
+                # file_name = (
+                #     f"{type(self).__name__}_{num}_{survival_rate}_{number_removal}_thinned.out"
+                # )
+                # file_path = os.path.join(cwd, file_name)
+                # if os.path.isfile(file_path):
+                #    raise FileExistsError(f"File {file_path} already exists.")
+                # else:
+                np.savetxt(
+                    save_path,
+                    sorted_result,
+                    fmt=["%d"] + ["%.6f"] * 3,
+                    delimiter=" ",
                 )
-                file_path = os.path.join(cwd, file_name)
-                if os.path.isfile(file_path):
-                    raise FileExistsError(f"File {file_path} already exists.")
-                else:
-                    np.savetxt(
-                        file_path,
-                        sorted_result,
-                        fmt=["%d"] + ["%.6f"] * 3,
-                        delimiter=" ",
-                    )
-                    #remove the trailing newline
-                    with open(file_path) as f_input:
-                        data = f_input.read().rstrip('\n')
-                    with open(file_path, 'w') as f_output:    
-                        f_output.write(data)
-                    print(f"File saved @ {file_path} in homcloud format.")
+                #remove the trailing newline
+                with open(save_path) as f_input:
+                    data = f_input.read().rstrip('\n')
+                with open(save_path, 'w') as f_output:    
+                    f_output.write(data)
+                print(f"File saved @ {save_path} in homcloud format.")
+                return save_path
             else:
                 return sorted_result
         elif style == "survived":
             # sorted_result is None
-            if save:
-                file_name = (
-                    f"{type(self).__name__}_{num}_{survival_rate}_thinned.out"
-                )
-                file_path = os.path.join(cwd, file_name)
-                if os.path.isfile(file_path):
-                    raise FileExistsError(f"File {file_path} already exists.")
-                else:
-                    np.savetxt(file_path, data, delimiter=" ")
-                    #remove the trailing newline
-                    with open(file_path) as f_input:
-                        data = f_input.read().rstrip('\n')
-                    with open(file_path, 'w') as f_output:    
-                        f_output.write(data)
-                    print(f"File saved @ {file_path}.")
+            if save_path is not None:
+                np.savetxt(save_path, data, delimiter=" ")
+                #remove the trailing newline
+                with open(save_path) as f_input:
+                    data = f_input.read().rstrip('\n')
+                with open(save_path, 'w') as f_output:    
+                    f_output.write(data)
+                print(f"File saved @ {save_path}.")
+                return save_path
             else:
                 return Points3D(df)
         else:
