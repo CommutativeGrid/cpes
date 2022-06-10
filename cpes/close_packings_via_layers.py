@@ -13,6 +13,8 @@ from hexalattice.hexalattice import create_hex_grid
 from matplotlib.colors import ListedColormap
 from sklearn.metrics.pairwise import euclidean_distances
 import plotly.express as px
+from operator import itemgetter
+import random
 
 
 from .utils import *
@@ -109,12 +111,13 @@ class ClosePacking(Points3D):
         neighbours_count=[len(t) for t in neighbours_indices]
         return df.assign(neighbours_count=neighbours_count,neighbours=neighbours_indices)
 
-    def paired_thinning(self,number_removal,from_layer=0,to_layer=1,save_path=None,style="survived",inplace=False,is_removable="is_interior"):
+    def thinning(self,mode,number_removal,from_layer=0,to_layer=1,style="survived",save_path=None,inplace=True,is_removable="is_interior"):
         """
+        mode: singlet, doublet, triplet
         thinning with paired thinning
         remove adjacent pairs of atoms
         """
-        assert number_removal >=0 and number_removal % 2 == 0 #number_removal must be even
+        assert number_removal >=0
         df=self.df.copy()
         if is_removable is None:
             removable_index_list=list(df.loc[df["layer_joined"]==from_layer].index)
@@ -122,31 +125,80 @@ class ClosePacking(Points3D):
             if is_removable not in df.columns:
                 raise ValueError(f"{is_removable} is not in the dataframe")
             removable_index_list = list(df[pd.concat([df[is_removable], df["layer_joined"]==from_layer],axis=1).all(axis=1)].index)
-            print(removable_index_list)
-        atoms_removed = random.sample(removable_index_list,number_removal)
-        companions=[]
-        for i in atoms_removed:
-            # only remove an adjacent atom that is also interior
-            candidates=[*df.loc[i].neighbours]
-            while True:
+        if mode == "singlet":
+            atoms_removed = random.sample(removable_index_list,number_removal)
+        elif mode == "doublet":
+            number_removal = number_removal // 2
+            part_one = random.sample(removable_index_list,number_removal)
+            companions=[]
+            for i in part_one:
+                # only remove an adjacent atom that is also interior
+                candidates=set([_ for _ in df.loc[i].neighbours if df.loc[_].is_interior])
                 try:
-                    companion=random.choice(candidates)
+                    companion=random.choice(tuple(candidates))
+                    companions.append(companion)
                 except IndexError:
                     print("No more adjacent interior atom.")
-                    break
-                if df.loc[companion].is_interior:
-                    companions.append(companion)
-                    break
-                else:
-                    candidates.remove(companion)
-        atoms_removed=set([*atoms_removed,*companions])
+                    continue
+            atoms_removed=set([*part_one,*companions])
+        elif mode == "triplet":
+            number_removal = number_removal // 3
+            nodes_g1 = random.sample(removable_index_list,number_removal)
+            nodes_g2=[]
+            nodes_g3=[]
+            for node1 in nodes_g1:
+                # only remove an adjacent atom that is also interior
+                #candidates_n2=set(df.loc[node1].neighbours)
+                candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
+                ## TODO remove non-interior nodes from candidates
+                while True:
+                    try:
+                        node2=random.choice(tuple(candidates_n2))
+                        candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
+                    except IndexError:
+                        print("No more adjacent interior atom.")
+                        break
+                    try:
+                        node3=random.choice(tuple(candidates_n3))
+                        nodes_g2.append(node2)
+                        nodes_g3.append(node3)
+                        break
+                    except IndexError:
+                        candidates_n2.remove(node2)
+                        print("Removing unqualified node2")
+                        continue
+            atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3])
+        elif mode == "quartet":
+            ...
+        else:
+            raise NotImplementedError(f"Mode {mode} is not implemented.")
+        print(f"Mode: {mode}, changing the layer of {len(atoms_removed)} atoms.")
         df.loc[atoms_removed,"layer_joined"]=to_layer
-        self.df=df
-        #TODO homcloud style output
+        if inplace:
+            print("Replacing the original lattice layer data with the new one.")
+            self.df=df
+        if style == "survived":
+            return df.loc[df["layer_joined"]==from_layer]
+        elif style == "homcloud":
+            labelled_data=[(int(l),*vec) for l,*vec in df[["layer_joined","x","y","z",]].values]
+            sorted_result = np.array(sorted(labelled_data, key=itemgetter(0)))
+            if save_path is not None:
+                np.savetxt(save_path,sorted_result,fmt=["%d"] + ["%.6f"] * 3,delimiter=" ")
+                #remove the trailing newline
+                with open(save_path) as f_input:
+                    data = f_input.read().rstrip('\n')
+                with open(save_path, 'w') as f_output:    
+                    f_output.write(data)
+                print(f"File saved @ {save_path} in homcloud format.")
+                return save_path
+            else:
+                return sorted_result
+        else:
+            raise NotImplementedError(f"Style {style} is not implemented.")
 
 
 
-    def thinning(self, survival_rate=None, number_removal=None, save_path=None, style="survived", inplace=False, is_removable="is_interior"):
+    def thinning_obsolete(self, survival_rate=None, number_removal=None, save_path=None, style="survived", inplace=False, is_removable="is_interior"):
         print("Only interior points are involved in the thinning process.")
         return super().thinning(survival_rate=survival_rate, number_removal=number_removal, save_path=save_path, style=style, inplace=inplace, is_removable=is_removable)
 
