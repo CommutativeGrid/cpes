@@ -12,6 +12,7 @@ import pandas as pd
 from hexalattice.hexalattice import create_hex_grid
 from matplotlib.colors import ListedColormap
 from sklearn.metrics.pairwise import euclidean_distances
+import plotly.express as px
 
 
 from .utils import *
@@ -104,11 +105,45 @@ class ClosePacking(Points3D):
         # distance matrix
         distance_matrix = euclidean_distances(df[["x","y","z"]])
         # count the number of neighbours, minus one to remove itself
-        num_neighbours=[len([value for value in vector if value<2 * self.radius*1.001])-1 for vector in distance_matrix]
-        return df.assign(neighbours=num_neighbours)
-        #TODO
-        # render colors according to the number of neighbours
-        # then decide the value for thinning
+        neighbours_indices=[tuple(j for j,value in enumerate(vector) if value<2 * self.radius*1.001 and j!=i) for i,vector in enumerate(distance_matrix)]
+        neighbours_count=[len(t) for t in neighbours_indices]
+        return df.assign(neighbours_count=neighbours_count,neighbours=neighbours_indices)
+
+    def paired_thinning(self,number_removal,from_layer=0,to_layer=1,save_path=None,style="survived",inplace=False,is_removable="is_interior"):
+        """
+        thinning with paired thinning
+        remove adjacent pairs of atoms
+        """
+        assert number_removal >=0 and number_removal % 2 == 0 #number_removal must be even
+        df=self.df.copy()
+        if is_removable is None:
+            removable_index_list=list(df.loc[df["layer_joined"]==from_layer].index)
+        else:
+            if is_removable not in df.columns:
+                raise ValueError(f"{is_removable} is not in the dataframe")
+            removable_index_list = list(df[pd.concat([df[is_removable], df["layer_joined"]==from_layer],axis=1).all(axis=1)].index)
+            print(removable_index_list)
+        atoms_removed = random.sample(removable_index_list,number_removal)
+        companions=[]
+        for i in atoms_removed:
+            # only remove an adjacent atom that is also interior
+            candidates=[*df.loc[i].neighbours]
+            while True:
+                try:
+                    companion=random.choice(candidates)
+                except IndexError:
+                    print("No more adjacent interior atom.")
+                    break
+                if df.loc[companion].is_interior:
+                    companions.append(companion)
+                    break
+                else:
+                    candidates.remove(companion)
+        atoms_removed=set([*atoms_removed,*companions])
+        df.loc[atoms_removed,"layer_joined"]=to_layer
+        self.df=df
+
+
 
     def thinning(self, survival_rate=None, number_removal=None, save_path=None, style="survived", inplace=False, is_removable="is_interior"):
         print("Only interior points are involved in the thinning process.")
@@ -119,6 +154,17 @@ class ClosePacking(Points3D):
         return the number of interior points
         """
         return len(self.df.loc[self.df["is_interior"] == True])
+
+    def plot_coordination_number(self,color_column="neighbours_count"):
+        """
+        plot with coordination number implied
+        color_column: neighbours or is_interior
+        """
+        fig = px.scatter_3d(self.df, x='x', y='y', z='z',
+              color=color_column)
+        #fig.show()
+        return fig
+
 
 
 class FaceCenteredCubic(ClosePacking):
@@ -155,7 +201,7 @@ class FaceCenteredCubic(ClosePacking):
             print("Adding perturbation to the point cloud.")
             self.add_perturbation()
         self.df=self.neighbours_counting(self.df)
-        self.df=self.df.assign(is_interior=self.df["neighbours"]==12)
+        self.df=self.df.assign(is_interior=self.df["neighbours_count"]==12,layer_joined=0)
         
 
     def set_palette(self):
@@ -203,7 +249,7 @@ class HexagonalClosePacking(ClosePacking):
             print("Adding perturbation to the point cloud.")
             self.add_perturbation()
         self.df=self.neighbours_counting(self.df)
-        self.df=self.df.assign(is_interior=self.df["neighbours"]==12)
+        self.df=self.df.assign(is_interior=self.df["neighbours_count"]==12,layer_joined=0)
 
     def set_palette(self):
         """function used for assigning different colors for different types of atoms."""
