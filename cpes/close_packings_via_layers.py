@@ -142,6 +142,7 @@ class ClosePacking(Points3D):
         atoms_removed=set([*atoms_removed,*companions])
         df.loc[atoms_removed,"layer_joined"]=to_layer
         self.df=df
+        #TODO homcloud style output
 
 
 
