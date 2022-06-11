@@ -129,49 +129,126 @@ class ClosePacking(Points3D):
             atoms_removed = random.sample(removable_index_list,number_removal)
         elif mode == "doublet":
             number_removal = number_removal // 2
-            part_one = random.sample(removable_index_list,number_removal)
-            companions=[]
-            for i in part_one:
+            nodes_g1 = random.sample(removable_index_list,number_removal)
+            nodes_g2=[]
+            for node1 in nodes_g1:
+                # node1 is the seed for growing a pair
                 # only remove an adjacent atom that is also interior
-                candidates=set([_ for _ in df.loc[i].neighbours if df.loc[_].is_interior])
-                try:
-                    companion=random.choice(tuple(candidates))
-                    companions.append(companion)
-                except IndexError:
+                candidates=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
+                if len(candidates)==0: # see if candidates is empty
                     print("No more adjacent interior atom.")
                     continue
-            atoms_removed=set([*part_one,*companions])
+                else:
+                    node2=random.choice(list(candidates))
+                    nodes_g2.append(node2)
+            atoms_removed=set([*nodes_g1,*nodes_g2])
         elif mode == "triplet":
             number_removal = number_removal // 3
             nodes_g1 = random.sample(removable_index_list,number_removal)
             nodes_g2=[]
             nodes_g3=[]
             for node1 in nodes_g1:
-                # only remove an adjacent atom that is also interior
-                #candidates_n2=set(df.loc[node1].neighbours)
-                candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
-                ## TODO remove non-interior nodes from candidates
-                while True:
-                    try:
-                        node2=random.choice(tuple(candidates_n2))
-                        candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
-                    except IndexError:
-                        print("No more adjacent interior atom.")
-                        break
-                    try:
-                        node3=random.choice(tuple(candidates_n3))
+                # node1 is the seed for growing a triangle
+                candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior]) # only remove an adjacent atom that is also interior
+                if len(candidates_n2)==0: # see if candidates is empty
+                    print("No more adjacent interior atom.")
+                    continue
+                candidates_n2_shuffled=list(candidates_n2)
+                random.shuffle(candidates_n2_shuffled)
+                flag="searching"
+                for node2 in candidates_n2_shuffled: # iterate over the shuffled set, no need to remove 
+                    candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
+                    if len(candidates_n3)==0:
+                        continue
+                    else:
+                        node3=random.choice(list(candidates_n3))
                         nodes_g2.append(node2)
                         nodes_g3.append(node3)
+                        flag="found"
                         break
-                    except IndexError:
-                        candidates_n2.remove(node2)
-                        print("Removing unqualified node2")
-                        continue
+                if flag=="searching":
+                    print(f"No interior triangle can be built from point {node1}.")
+                    # seems that can always find a triangle
+                # while True:
+                #     try:
+                #         node2=random.choice(tuple(candidates_n2))
+                #         candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
+                    
+                #     except IndexError: # no more candidate in candidates_n2
+                #         print("No more adjacent interior atom.")
+                #         break
+                #     try:
+                #         node3=random.choice(tuple(candidates_n3))
+                #         nodes_g2.append(node2)
+                #         nodes_g3.append(node3)
+                #         break
+                #     except IndexError: # no candidate in candidates_n3
+                #         candidates_n2.remove(node2)
+                #         print("Removing unqualified node2")
+                #         continue
             atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3])
         elif mode == "quartet":
-            ...
+            number_removal = number_removal // 4
+            nodes_g1 = random.sample(removable_index_list,number_removal)
+            nodes_g2=[]
+            nodes_g3=[]
+            nodes_g4=[]
+            for node1 in nodes_g1:
+                # node1 is the seed for growing a tetrahedron
+                candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
+                if len(candidates_n2)==0: # see if candidates is empty
+                    print("No more adjacent interior atom.")
+                    continue
+                candidates_n2_shuffled=list(candidates_n2)
+                random.shuffle(candidates_n2_shuffled)
+                flag="searching"
+                for node2 in candidates_n2_shuffled: # iterate over the shuffled set, no need to remove
+                    candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
+                    if len(candidates_n3)==0:
+                        continue
+                    candidates_n3_shuffled=list(candidates_n3)
+                    random.shuffle(candidates_n3_shuffled)
+                    for node3 in candidates_n3_shuffled:
+                        candidates_n4=candidates_n3.intersection(set([_ for _ in df.loc[node3].neighbours if df.loc[_].is_interior]))
+                        if len(candidates_n4)==0:
+                            continue
+                        else:
+                            node4=random.choice(list(candidates_n4))
+                            nodes_g2.append(node2)
+                            nodes_g3.append(node3)
+                            nodes_g4.append(node4)
+                            flag="found"
+                            break
+                    if flag=="found":
+                        break
+                if flag=="searching":
+                    print(f"No interior tetrahedron can be built from point {node1}.")
+                # while True:
+                #     try:
+                #         node2=random.choice(tuple(candidates_n2))
+                #         candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
+                #     except IndexError:
+                #         print("No more adjacent interior atom.")
+                #         break
+                #     try:
+                #         node3=random.choice(tuple(candidates_n3))
+                #         candidates_n4=candidates_n3.intersection(set([_ for _ in df.loc[node3].neighbours if df.loc[_].is_interior]))
+                #     except IndexError:
+                #         candidates_n2.remove(node2)
+                #         print("No more adjacent interior atom.")
+                #         break
+                #     try:
+                #         node4=random.choice(tuple(candidates_n4))
+                #         nodes_g2.append(node2)
+                #         nodes_g3.append(node3)
+                #         nodes_g4.append(node4)
+                #         break
+                #     except IndexError:
+                #         candidates_n2.remove(node2)
+                #         print("Removing unqualified node2")
+            atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3,*nodes_g4])
         else:
-            raise NotImplementedError(f"Mode {mode} is not implemented.")
+            raise NotImplementedError(f"Mode {mode} not implemented.")
         print(f"Mode: {mode}, changing the layer of {len(atoms_removed)} atoms.")
         df.loc[atoms_removed,"layer_joined"]=to_layer
         if inplace:
