@@ -131,31 +131,36 @@ class ClosePacking(Points3D):
             number_removal = number_removal // 2
             nodes_g1 = random.sample(removable_index_list,number_removal)
             nodes_g2=[]
+            remove_from_g1 =[]
             for node1 in nodes_g1:
                 # node1 is the seed for growing a pair
                 # only remove an adjacent atom that is also interior
                 candidates=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
                 if len(candidates)==0: # see if candidates is empty
                     print("No more adjacent interior atom.")
+                    remove_from_g1.append(node1)
                     continue
                 else:
                     node2=random.choice(list(candidates))
                     nodes_g2.append(node2)
+            nodes_g1=list(set(nodes_g1)-set(remove_from_g1))
             atoms_removed=set([*nodes_g1,*nodes_g2])
         elif mode == "triplet":
             number_removal = number_removal // 3
             nodes_g1 = random.sample(removable_index_list,number_removal)
             nodes_g2=[]
             nodes_g3=[]
+            remove_from_g1 =[]
             for node1 in nodes_g1:
                 # node1 is the seed for growing a triangle
+                flag="searching"
                 candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior]) # only remove an adjacent atom that is also interior
                 if len(candidates_n2)==0: # see if candidates is empty
                     print("No more adjacent interior atom.")
+                    remove_from_g1.append(node1)
                     continue
                 candidates_n2_shuffled=list(candidates_n2)
                 random.shuffle(candidates_n2_shuffled)
-                flag="searching"
                 for node2 in candidates_n2_shuffled: # iterate over the shuffled set, no need to remove 
                     candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
                     if len(candidates_n3)==0:
@@ -168,6 +173,7 @@ class ClosePacking(Points3D):
                         break
                 if flag=="searching":
                     print(f"No interior triangle can be built from point {node1}.")
+                    remove_from_g1.append(node1)
                     # seems that can always find a triangle
                 # while True:
                 #     try:
@@ -186,6 +192,7 @@ class ClosePacking(Points3D):
                 #         candidates_n2.remove(node2)
                 #         print("Removing unqualified node2")
                 #         continue
+            nodes_g1=list(set(nodes_g1)-set(remove_from_g1))
             atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3])
         elif mode == "quartet":
             number_removal = number_removal // 4
@@ -193,15 +200,17 @@ class ClosePacking(Points3D):
             nodes_g2=[]
             nodes_g3=[]
             nodes_g4=[]
+            remove_from_g1 =[]
             for node1 in nodes_g1:
                 # node1 is the seed for growing a tetrahedron
+                flag="searching"
                 candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
                 if len(candidates_n2)==0: # see if candidates is empty
                     print("No more adjacent interior atom.")
+                    remove_from_g1.append(node1)
                     continue
                 candidates_n2_shuffled=list(candidates_n2)
                 random.shuffle(candidates_n2_shuffled)
-                flag="searching"
                 for node2 in candidates_n2_shuffled: # iterate over the shuffled set, no need to remove
                     candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
                     if len(candidates_n3)==0:
@@ -223,6 +232,7 @@ class ClosePacking(Points3D):
                         break
                 if flag=="searching":
                     print(f"No interior tetrahedron can be built from point {node1}.")
+                    remove_from_g1.append(node1)
                 # while True:
                 #     try:
                 #         node2=random.choice(tuple(candidates_n2))
@@ -246,7 +256,68 @@ class ClosePacking(Points3D):
                 #     except IndexError:
                 #         candidates_n2.remove(node2)
                 #         print("Removing unqualified node2")
+            nodes_g1=list(set(nodes_g1)-set(remove_from_g1))
             atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3,*nodes_g4])
+        elif mode == "quintet":
+            # will not find a qunitet in FCC
+            number_removal = number_removal // 5
+            nodes_g1 = random.sample(removable_index_list,number_removal)
+            nodes_g2=[]
+            nodes_g3=[]
+            nodes_g4=[]
+            nodes_g5=[]
+            for node1 in nodes_g1:
+                # node1 is the seed for growing a tetrahedron
+                candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
+                if len(candidates_n2)==0: # see if candidates is empty
+                    print("No more adjacent interior atom.")
+                    continue
+                candidates_n2_shuffled=list(candidates_n2)
+                random.shuffle(candidates_n2_shuffled)
+                flag="searching"
+                for node2 in candidates_n2_shuffled: # iterate over the shuffled set, no need to remove
+                    candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
+                    if len(candidates_n3)==0:
+                        continue
+                    candidates_n3_shuffled=list(candidates_n3)
+                    random.shuffle(candidates_n3_shuffled)
+                    for node3 in candidates_n3_shuffled:
+                        candidates_n4=candidates_n3.intersection(set([_ for _ in df.loc[node3].neighbours if df.loc[_].is_interior]))
+                        if len(candidates_n4)==0:
+                            continue
+                        else:
+                            node4=random.choice(list(candidates_n4))
+                            flag="found"
+                            break
+                    if flag=="found":
+                        break # break out of the for loop of node2
+                if flag == "searching":
+                    print(f"No interior tetrahedron can be built from point {node1}.")
+                    continue
+                # create the list of the common neighbours of 123,124,134, and 234
+                neighbours_1=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior or True])
+                neighbours_2=set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior or True])
+                neighbours_3=set([_ for _ in df.loc[node3].neighbours if df.loc[_].is_interior or True])
+                neighbours_4=set([_ for _ in df.loc[node4].neighbours if df.loc[_].is_interior or True])
+                print(node1,node2,node3,node4)
+                print(f"neighbours_1: {neighbours_1}")
+                print(f"neighbours_2: {neighbours_2}")
+                print(f"neighbours_3: {neighbours_3}")
+                print(f"neighbours_4: {neighbours_4}")
+                candidates_n5=neighbours_1 & neighbours_2 & neighbours_3 | neighbours_1 & neighbours_2 & neighbours_4 | neighbours_1 & neighbours_3 & neighbours_4 | neighbours_2 & neighbours_3 & neighbours_4
+                candidates_n5 = candidates_n5 - set({node1,node2,node3,node4})
+                print(candidates_n5)
+                if len(candidates_n5)==0:
+                    flag="searching"
+                else:
+                    node5=random.choice(list(candidates_n5))
+                    nodes_g2.append(node2)
+                    nodes_g3.append(node3)
+                    nodes_g4.append(node4)
+                    nodes_g5.append(node5)
+                if flag=="searching":
+                    print(f"No interior hexahedron can be built from point {node1}.")
+            atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3,*nodes_g4,*nodes_g5])
         else:
             raise NotImplementedError(f"Mode {mode} not implemented.")
         print(f"Mode: {mode}, changing the layer of {len(atoms_removed)} atoms.")
