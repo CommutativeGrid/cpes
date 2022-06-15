@@ -258,6 +258,39 @@ class ClosePacking(Points3D):
                 #         print("Removing unqualified node2")
             nodes_g1=list(set(nodes_g1)-set(remove_from_g1))
             atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3,*nodes_g4])
+        elif "chain" in mode:
+            chain_length = int(mode.split('-')[0])
+            number_removal = number_removal // chain_length
+            chains_found=0
+            failed=0
+            atoms_removed=set()
+            while True:
+            #for _ in range(number_removal):
+                flag="searching"
+                selected=set()
+                new_node = random.choice(removable_index_list)
+                selected.add(new_node)
+                for i in range(chain_length-1):
+                    candidates=set([_ for _ in df.loc[new_node].neighbours if df.loc[_].is_interior])\
+                        & set(removable_index_list)\
+                            - selected
+                    if len(candidates)==0:
+                        flag="failed"
+                        break
+                    else:
+                        new_node=random.choice(list(candidates))
+                        selected.add(new_node)
+                if flag=="failed":
+                    failed+=1
+                else:
+                    flag="found"
+                    chains_found+=1
+                    removable_index_list=list(set(removable_index_list)-selected)
+                    atoms_removed = atoms_removed | selected
+                if chains_found>=number_removal:
+                    break
+                elif failed>=number_removal:
+                    raise ValueError("No chain can be built from the given set of atoms.")
         elif mode == "quintet":
             # will not find a qunitet in FCC
             number_removal = number_removal // 5
