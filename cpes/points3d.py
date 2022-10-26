@@ -251,15 +251,6 @@ class Points3D:
             self.thinning_history.append({"survival_rate":survival_rate, "number_removal":number_removal})
         if style == "homcloud":
             if save_path is not None:
-                #save is a file path
-                # cwd = os.getcwd()
-                # file_name = (
-                #     f"{type(self).__name__}_{num}_{survival_rate}_{number_removal}_thinned.out"
-                # )
-                # file_path = os.path.join(cwd, file_name)
-                # if os.path.isfile(file_path):
-                #    raise FileExistsError(f"File {file_path} already exists.")
-                # else:
                 np.savetxt(
                     save_path,
                     sorted_result,
