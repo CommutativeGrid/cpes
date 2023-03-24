@@ -25,7 +25,7 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     "numpy",
     "pandas",
-    "sklearn",
+    "scikit-learn",
     "rdfpy",
     "matplotlib",
     "hexalattice",
