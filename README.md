@@ -8,6 +8,8 @@ This package provides the following three functions:
 
 ## Installation
 
+For `hexalattice`, commented `matplotlib.use('Qt5Agg')` at `line 17` of `hexalattice.py`.
+
 ```
 git clone https://github.com/Commutative-Ladders/cpes.git
 ```
