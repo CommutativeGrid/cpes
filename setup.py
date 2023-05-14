@@ -28,7 +28,7 @@ INSTALL_REQUIRES = [
     "scikit-learn",
     "rdfpy",
     "matplotlib",
-    "hexalattice",
+    "hexalattice @ https://github.com/Commutative-Ladder/hexalattice.git",
     "requests",
     "plotly",
     "pyvista",
