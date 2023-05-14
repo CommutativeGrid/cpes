@@ -28,7 +28,6 @@ INSTALL_REQUIRES = [
     "scikit-learn",
     "rdfpy",
     "matplotlib",
-    "hexalattice @ https://github.com/Commutative-Ladder/hexalattice.git",
     "requests",
     "plotly",
     "pyvista",
@@ -36,6 +35,10 @@ INSTALL_REQUIRES = [
     "panel",
     "crystals",
 ]
+
+DEPENDENCY_LINKS = [
+      'https://github.com/Commutative-Ladder/hexalattice.git',
+]   
 
 setup(
     name=PACKAGE_NAME,
