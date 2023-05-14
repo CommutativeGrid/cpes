@@ -34,11 +34,8 @@ INSTALL_REQUIRES = [
     "pythreejs",
     "panel",
     "crystals",
+    "hexalattice @ git+https://github.com/Commutative-Ladder/hexalattice.git"
 ]
-
-DEPENDENCY_LINKS = [
-      'https://github.com/Commutative-Ladder/hexalattice.git',
-]   
 
 setup(
     name=PACKAGE_NAME,
