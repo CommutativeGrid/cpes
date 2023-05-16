@@ -27,11 +27,11 @@ def test_HexagonalClosePacking():
 
 def test_neighboursCounting_FCC():
     fcc = FaceCenteredCubic(10)
-    assert len(fcc.df.loc[fcc.df["neighbours"]==12])==492
-    assert max(set(fcc.df["neighbours"]))==12
+    assert len(fcc.df.loc[fcc.df["neighbours"].apply(lambda x: len(x))==12])==492
+    assert max(set(fcc.df["neighbours"].apply(lambda x: len(x))))==12
     
 def test_neighboursCounting_HCP():
     hcp = HexagonalClosePacking(10)
-    assert len(hcp.df.loc[hcp.df["neighbours"]==12])==512
-    assert max(set(hcp.df["neighbours"]))==12
+    assert len(hcp.df.loc[hcp.df["neighbours"].apply(lambda x: len(x))==12])==512
+    assert max(set(hcp.df["neighbours"].apply(lambda x: len(x))))==12
 

@@ -221,6 +221,7 @@ class Points3D:
         """
         mean = 0
         sigma = 1e-4
+        print(f"Adding perturbation with mean {mean} and sigma {sigma}.")
         flattened = self.data.flatten()
         flattened_perturbed = flattened + np.random.normal(mean, sigma, len(flattened))
         self.data = flattened_perturbed.reshape(self.data.shape)
