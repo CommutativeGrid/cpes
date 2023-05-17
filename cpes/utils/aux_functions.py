@@ -14,6 +14,9 @@ import random
 from rdfpy import rdf
 from scipy.spatial.distance import euclidean
 from sklearn.metrics.pairwise import euclidean_distances
+import plotly.express as px
+import numpy as np
+from scipy.signal import argrelextrema
 
 
 def distance_array(data, n=20):
@@ -36,7 +39,7 @@ def rdf_plot(data, start=2, end=6, step=0.05, divided_by_2=True):
     """
     center = data[center_point_cloud(data)]
     print(f"center of the point cloud is {center}")
-    print("The point cloud shall be origin centered.")
+    print("The point cloud should be centered around the origin.")
     points = data
     g_r, radii = rdf(points, dr=step)
     number_pts_per_unit = int(1 / step)
@@ -46,10 +49,14 @@ def rdf_plot(data, start=2, end=6, step=0.05, divided_by_2=True):
     y_coords = g_r[index_left:index_right]
     if divided_by_2:
         x_coords /= 2
-    plt.figure()
-    plt.plot(x_coords, y_coords)
-    plt.show()
-    return [i for i,j in zip(x_coords, y_coords) if j!=0]
+    fig = px.line(x=x_coords, y=y_coords, title='Radial Distribution Function')
+    # define local peaks to be points in zip(x_coords, y_coords) with y_coords not smaller 
+    # than both the previous and the next y_coords
+    local_peaks_indices = argrelextrema(y_coords, np.greater)
+    local_peaks=np.array(list(zip(x_coords,y_coords)))[local_peaks_indices]
+    fig.add_scatter(x=local_peaks[:,0], y=local_peaks[:,1], mode='markers', marker=dict(size=5, color='red'),name='Peaks')
+    
+    return (fig,local_peaks)
 
 
 def coordination_number(data, crictical_value, anchor="random"):
@@ -124,7 +131,7 @@ def thinning_aux(df, survival_rate=None, number_removal=None, style="homcloud", 
         the style of thinning. The default is 'homcloud'.
         'homcloud' : remained points will be labelled 0.
         'survived' : only returns the survived points.
-    is_removable: str, optional
+    is_removable: str, or list of str, optional
         name of the column to be used as the removal criteria.
     The meaning of 間引き率 in the paper may lead different understandings
     (for example see table 1 in section 4 of the paper below:
@@ -137,10 +144,14 @@ def thinning_aux(df, survival_rate=None, number_removal=None, style="homcloud", 
         removable_index_list=list(df.index)
         nonremovable_index_list=[]
     else:
-        if is_removable not in df.columns:
-            raise ValueError(f"{is_removable} is not in the dataframe")
-        removable_index_list = list(df.loc[df[is_removable]==True].index)
-        nonremovable_index_list = list(df.loc[df[is_removable]==False].index)
+        if isinstance(is_removable, str):
+            if is_removable not in df.columns:
+                raise ValueError(f"{is_removable} is not in the dataframe")
+            removable_index_list = list(df.loc[df[is_removable]==True].index)
+            nonremovable_index_list = list(df.loc[df[is_removable]==False].index)
+        if isinstance(is_removable, list):
+            removable_index_list = list(df.loc[df[is_removable].all(axis=1)].index)
+            nonremovable_index_list = list(df.loc[df[is_removable].all(axis=1)].index)
 
     if number_removal is None:
         # number of points to be removed is calculated based on the total number of points
