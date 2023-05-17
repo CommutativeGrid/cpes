@@ -156,7 +156,7 @@ def thinning_aux(df, survival_rate=None, number_removal=None, style="homcloud", 
     if number_removal is None:
         # number of points to be removed is calculated based on the total number of points
         number_removal = int(len(df.index) * (1 - survival_rate)) 
-    number_remained = len(removable_index_list) - number_removal
+    number_remained = int(len(removable_index_list) - number_removal)
     removable_index_remained = random.sample(removable_index_list, number_remained) # sampling without duplicates
     index_remained = [*removable_index_remained,*nonremovable_index_list]
 

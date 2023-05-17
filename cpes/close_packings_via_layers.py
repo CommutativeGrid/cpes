@@ -111,7 +111,7 @@ class ClosePacking(Points3D):
         neighbours_count=[len(t) for t in neighbours_indices]
         return df.assign(neighbours_count=neighbours_count,neighbours=neighbours_indices)
 
-    def thinning(self,mode,number_removal,from_layer=0,to_layer=1,style="survived",save_path=None,inplace=True,is_removable="is_interior"):
+    def thinning(self,mode,number_removal,from_layer=0,to_layer=1,style="survived",save_path=None,inplace=True,is_removable=None):
         """
         mode: singlet, doublet, triplet
         thinning with paired thinning
@@ -387,7 +387,7 @@ class ClosePacking(Points3D):
         """
         return the number of interior points
         """
-        return len(self.df.loc[self.df["is_interior"] == True])
+        return self.df["is_interior"].sum()
 
     def plot_coordination_number(self,color_column="neighbours_count"):
         """
