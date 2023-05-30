@@ -32,7 +32,7 @@ class Points3D:
         """
         Return the xyz coordinates
         """
-        return self.df.iloc[:, :3].to_numpy(dtype=float)
+        return self.data
     
     @property
     def data(self):
@@ -46,7 +46,7 @@ class Points3D:
         """
         Set the xyz coordinates
         """
-        self.df.iloc[:,:3]=xyz_coord
+        self.data=xyz_coord
 
     @data.setter
     def data(self,xyz_coord):

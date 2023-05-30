@@ -116,6 +116,9 @@ class ClosePacking(Points3D):
         mode: singlet, doublet, triplet
         thinning with paired thinning
         remove adjacent pairs of atoms
+        from_layer: the layer to remove atoms from
+        to_layer: the layer to remove atoms to
+        layer_joined: the layer that the atom is currently in
         """
         assert number_removal >=0
         df=self.df.copy()
@@ -357,7 +360,7 @@ class ClosePacking(Points3D):
         df.loc[atoms_removed,"layer_joined"]=to_layer
         if inplace:
             print("Replacing the original lattice layer data with the new one.")
-            self.df=df
+            self.df=df.loc[df["layer_joined"]==from_layer]
         if style == "survived":
             return df.loc[df["layer_joined"]==from_layer]
         elif style == "homcloud":
