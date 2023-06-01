@@ -198,6 +198,7 @@ class ClosePacking(Points3D):
             nodes_g1=list(set(nodes_g1)-set(remove_from_g1))
             atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3])
         elif mode == "quartet":
+            # guaranteed to find a tetrahedron because we use intersections here
             number_removal = number_removal // 4
             nodes_g1 = random.sample(removable_index_list,number_removal)
             nodes_g2=[]
@@ -213,7 +214,7 @@ class ClosePacking(Points3D):
                     remove_from_g1.append(node1)
                     continue
                 candidates_n2_shuffled=list(candidates_n2)
-                random.shuffle(candidates_n2_shuffled)
+                random.shuffle(candidates_n2_shuffled) # modified inplace
                 for node2 in candidates_n2_shuffled: # iterate over the shuffled set, no need to remove
                     candidates_n3=candidates_n2.intersection(set([_ for _ in df.loc[node2].neighbours if df.loc[_].is_interior]))
                     if len(candidates_n3)==0:
@@ -273,7 +274,9 @@ class ClosePacking(Points3D):
                 selected=set()
                 new_node = random.choice(removable_index_list)
                 selected.add(new_node)
-                for i in range(chain_length-1):
+                for i in range(chain_length-1): # & takes the intersection of two sets
+                    # should we use iloc here?
+
                     candidates=set([_ for _ in df.loc[new_node].neighbours if df.loc[_].is_interior])\
                         & set(removable_index_list)\
                             - selected
@@ -302,11 +305,13 @@ class ClosePacking(Points3D):
             nodes_g3=[]
             nodes_g4=[]
             nodes_g5=[]
+            remove_from_g1 =[]
             for node1 in nodes_g1:
-                # node1 is the seed for growing a tetrahedron
                 candidates_n2=set([_ for _ in df.loc[node1].neighbours if df.loc[_].is_interior])
+                # should we use iloc here?
                 if len(candidates_n2)==0: # see if candidates is empty
                     print("No more adjacent interior atom.")
+                    remove_from_g1.append(node1)
                     continue
                 candidates_n2_shuffled=list(candidates_n2)
                 random.shuffle(candidates_n2_shuffled)
@@ -352,17 +357,20 @@ class ClosePacking(Points3D):
                     nodes_g4.append(node4)
                     nodes_g5.append(node5)
                 if flag=="searching":
+                    remove_from_g1.append(node1)
                     print(f"No interior hexahedron can be built from point {node1}.")
+            nodes_g1=list(set(nodes_g1)-set(remove_from_g1))
             atoms_removed = set([*nodes_g1,*nodes_g2,*nodes_g3,*nodes_g4,*nodes_g5])
         else:
             raise NotImplementedError(f"Mode {mode} not implemented.")
         print(f"Mode: {mode}, changing the layer of {len(atoms_removed)} atoms.")
         df.loc[atoms_removed,"layer_joined"]=to_layer
+        output_df=df.loc[df["layer_joined"]==from_layer]
         if inplace:
             print("Replacing the original lattice layer data with the new one.")
-            self.df=df.loc[df["layer_joined"]==from_layer]
+            self.df=output_df
         if style == "survived":
-            return df.loc[df["layer_joined"]==from_layer]
+            return output_df
         elif style == "homcloud":
             labelled_data=[(int(l),*vec) for l,*vec in df[["layer_joined","x","y","z",]].values]
             sorted_result = np.array(sorted(labelled_data, key=itemgetter(0)))
