@@ -364,7 +364,10 @@ class ClosePacking(Points3D):
         else:
             raise NotImplementedError(f"Mode {mode} not implemented.")
         print(f"Mode: {mode}, changing the layer of {len(atoms_removed)} atoms.")
-        df.loc[atoms_removed,"layer_joined"]=to_layer
+        if not atoms_removed:
+            print("No atom is removed.")
+            return None
+        df.loc[list(atoms_removed),"layer_joined"]=to_layer
         output_df=df.loc[df["layer_joined"]==from_layer]
         if inplace:
             print("Replacing the original lattice layer data with the new one.")
