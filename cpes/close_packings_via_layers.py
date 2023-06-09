@@ -372,24 +372,31 @@ class ClosePacking(Points3D):
         if inplace:
             print("Replacing the original lattice layer data with the new one.")
             self.df=output_df
-        if style == "survived":
-            return output_df
-        elif style == "homcloud":
-            labelled_data=[(int(l),*vec) for l,*vec in df[["layer_joined","x","y","z",]].values]
-            sorted_result = np.array(sorted(labelled_data, key=itemgetter(0)))
-            if save_path is not None:
-                np.savetxt(save_path,sorted_result,fmt=["%d"] + ["%.6f"] * 3,delimiter=" ")
-                #remove the trailing newline
-                with open(save_path) as f_input:
-                    data = f_input.read().rstrip('\n')
-                with open(save_path, 'w') as f_output:    
-                    f_output.write(data)
-                print(f"File saved @ {save_path} in homcloud format.")
-                return save_path
+            # return sth to indicate the operation is successful
+            return True
+        elif not inplace:
+            if style == "survived":
+                # instead of returning a ClosePacking object, we return a dataframe,
+                # because after thinning this is no longer a close packing
+                # is this a reasonble argument? 
+                # maybe we should return a ClosePacking object with the new dataframe
+                return output_df
+            elif style == "homcloud":
+                labelled_data=[(int(l),*vec) for l,*vec in df[["layer_joined","x","y","z",]].values]
+                sorted_result = np.array(sorted(labelled_data, key=itemgetter(0)))
+                if save_path is not None:
+                    np.savetxt(save_path,sorted_result,fmt=["%d"] + ["%.6f"] * 3,delimiter=" ")
+                    #remove the trailing newline
+                    with open(save_path) as f_input:
+                        data = f_input.read().rstrip('\n')
+                    with open(save_path, 'w') as f_output:    
+                        f_output.write(data)
+                    print(f"File saved @ {save_path} in homcloud format.")
+                    return save_path
+                else:
+                    return sorted_result
             else:
-                return sorted_result
-        else:
-            raise NotImplementedError(f"Style {style} is not implemented.")
+                raise NotImplementedError(f"Style {style} is not implemented.")
 
 
 
