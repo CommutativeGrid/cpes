@@ -117,7 +117,7 @@ class Points3D:
         points are added to the plotter color by color
         otherwise the displayed colors will not all be correct
         """
-        #TODO add legend atom type-color
+        #colors https://docs.pyvista.org/version/stable/api/utilities/_autosummary/pyvista.Color.name.html
         plotter=pyvista.Plotter()
         sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
         self._add_color()
@@ -137,7 +137,7 @@ class Points3D:
             if len(typedf_highlight)>0:
                 add_mesh(typedf_highlight,opacity=1)
             if len(typedf_dimmed)>0:
-                add_mesh(typedf_dimmed,opacity=0.412)
+                add_mesh(typedf_dimmed,opacity=0.1)
 
         # Draw lines between specified points
         pairs = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3), (1, 4), (2, 4), (3, 4)]
@@ -146,10 +146,12 @@ class Points3D:
             point2 = self.df.loc[highlight[pair[1]], ['x', 'y', 'z']].values
             # import pdb; pdb.set_trace()
             line = pyvista.Line(list(point1), list(point2))
-            plotter.add_mesh(line, color='green', line_width=3)  # Adjust color and line_width as needed
+            plotter.add_mesh(line, color='lightgray', line_width=14)  # Adjust color and line_width as needed
 
-        plotter.set_background("royalblue", top="aliceblue")
-        plotter.show()
+        plotter.set_background("skyblue", top="aliceblue")
+        # plotter.set_background("aliceblue", top="royalblue")
+        # plotter.show()
+        return plotter
 
 
 

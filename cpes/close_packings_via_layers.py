@@ -299,6 +299,7 @@ class ClosePacking(Points3D):
                     raise ValueError("No chain can be built from the given set of atoms.")
         elif mode == "quintet":
             # will not find a qunitet in FCC
+            # is searching for a tetrahedron
             number_removal = number_removal // 5
             nodes_g1 = random.sample(removable_index_list,number_removal)
             nodes_g2=[]
