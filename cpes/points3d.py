@@ -152,6 +152,109 @@ class Points3D:
         # plotter.set_background("aliceblue", top="royalblue")
         # plotter.show()
         return plotter
+    
+    def plot_pyvista_dim2(self, backend='pythreejs', highlight:list=None):
+        """
+        Plot the point cloud using pyvista
+        points are added to the plotter color by color
+        otherwise the displayed colors will not all be correct
+        """
+        #colors https://docs.pyvista.org/version/stable/api/utilities/_autosummary/pyvista.Color.name.html
+        plotter=pyvista.Plotter()
+        sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
+        self._add_color()
+        
+        for t in set(self.df.type):
+            typedf_highlight=self.df.loc[highlight][self.df.type==t]
+            typedf_dimmed=self.df.loc[~self.df.index.isin(highlight)][self.df.type==t]
+            # import pdb; pdb.set_trace()
+            def add_mesh(typedf,opacity=1):
+                xyz=typedf.loc[:,['x','y','z']].to_numpy(dtype=float)
+                color=ListedColormap(typedf['color'].to_numpy())
+                pdata = pyvista.PolyData(xyz)
+                pdata['orig_sphere'] = np.arange(len(xyz))
+                pc = pdata.glyph(scale=False, geom=sphere)
+                plotter.add_mesh(pc, cmap=color, show_scalar_bar=False, opacity=opacity)
+            # add mesh if not empty
+            if len(typedf_highlight)>0:
+                add_mesh(typedf_highlight,opacity=1)
+            if len(typedf_dimmed)>0:
+                add_mesh(typedf_dimmed,opacity=0.1)
+
+        # Draw lines between specified points
+        pairs = [(0, 1), (0, 2), (1, 2), (0, 5), (1, 4), (2, 5), (2, 4), (4, 5), (0,3), (1,3), (3,5), (3,4)]
+        for pair in pairs:
+            point1 = self.df.loc[highlight[pair[0]], ['x', 'y', 'z']].values
+            point2 = self.df.loc[highlight[pair[1]], ['x', 'y', 'z']].values
+            # import pdb; pdb.set_trace()
+            line = pyvista.Line(list(point1), list(point2))
+            plotter.add_mesh(line, color='cornflowerblue', line_width=10)  # Adjust color and line_width as needed
+        
+        # draw semi-transparent triangles
+        mesh_triplets =[(0,1,2),(0,3,5),(0,2,5),(0,1,3),(1,2,4),(2,4,5),(1,3,4),(3,4,5)]
+        for triplet in mesh_triplets:
+            point1 = self.df.loc[highlight[triplet[0]], ['x', 'y', 'z']].values
+            point2 = self.df.loc[highlight[triplet[1]], ['x', 'y', 'z']].values
+            point3 = self.df.loc[highlight[triplet[2]], ['x', 'y', 'z']].values
+            triangle = pyvista.Triangle([list(point1), list(point2), list(point3)])
+            plotter.add_mesh(triangle, color='red',opacity=0.2,line_width=0)
+
+        plotter.set_background("aliceblue", top="aliceblue")
+        # plotter.set_background("aliceblue", top="royalblue")
+        # plotter.show()
+        return plotter
+    
+    def plot_pyvista_tetrahedron(self, backend='pythreejs', highlight:list=None):
+        """
+        Plot the point cloud using pyvista
+        points are added to the plotter color by color
+        otherwise the displayed colors will not all be correct
+        """
+        #colors https://docs.pyvista.org/version/stable/api/utilities/_autosummary/pyvista.Color.name.html
+        plotter=pyvista.Plotter()
+        sphere = pyvista.Sphere(radius=0.2, phi_resolution=30, theta_resolution=30)
+        self._add_color()
+        
+        for t in set(self.df.type):
+            typedf_highlight=self.df.loc[highlight][self.df.type==t]
+            typedf_dimmed=self.df.loc[~self.df.index.isin(highlight)][self.df.type==t]
+            # import pdb; pdb.set_trace()
+            def add_mesh(typedf,opacity=1):
+                xyz=typedf.loc[:,['x','y','z']].to_numpy(dtype=float)
+                color=ListedColormap(typedf['color'].to_numpy())
+                pdata = pyvista.PolyData(xyz)
+                pdata['orig_sphere'] = np.arange(len(xyz))
+                pc = pdata.glyph(scale=False, geom=sphere)
+                plotter.add_mesh(pc, cmap=color, show_scalar_bar=False, opacity=opacity)
+            # add mesh if not empty
+            if len(typedf_highlight)>0:
+                add_mesh(typedf_highlight,opacity=1)
+            if len(typedf_dimmed)>0:
+                add_mesh(typedf_dimmed,opacity=0.1)
+
+        # Draw lines between specified points
+        pairs = [(0, 1), (0, 2), (1, 2), (0,3),(1,3),(2,3)]
+        for pair in pairs:
+            point1 = self.df.loc[highlight[pair[0]], ['x', 'y', 'z']].values
+            point2 = self.df.loc[highlight[pair[1]], ['x', 'y', 'z']].values
+            # import pdb; pdb.set_trace()
+            line = pyvista.Line(list(point1), list(point2))
+            plotter.add_mesh(line, color='cornflowerblue', line_width=10)  # Adjust color and line_width as needed
+        
+        # draw semi-transparent triangles
+        mesh_triplets =[(0,1,2),(0,1,3),(0,2,3),(1,2,3)]
+        for triplet in mesh_triplets:
+            point1 = self.df.loc[highlight[triplet[0]], ['x', 'y', 'z']].values
+            point2 = self.df.loc[highlight[triplet[1]], ['x', 'y', 'z']].values
+            point3 = self.df.loc[highlight[triplet[2]], ['x', 'y', 'z']].values
+            triangle = pyvista.Triangle([list(point1), list(point2), list(point3)])
+            plotter.add_mesh(triangle, color='red',opacity=0.2,line_width=0)
+
+        plotter.set_background("aliceblue", top="aliceblue")
+        # plotter.set_background("aliceblue", top="royalblue")
+        # plotter.show()
+        return plotter
+
 
 
 

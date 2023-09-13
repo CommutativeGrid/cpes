@@ -124,6 +124,8 @@ class ClosePacking(Points3D):
         df=self.df.copy()
         if is_removable is None:
             removable_index_list=list(df.loc[df["layer_joined"]==from_layer].index)
+        elif is_removable=="all":
+            removable_index_list=list(df.index)
         else:
             if is_removable not in df.columns:
                 raise ValueError(f"{is_removable} is not in the dataframe")
