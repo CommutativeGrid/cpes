@@ -3,7 +3,6 @@
 This package provides the following three functions:
 
 * Construct fcc/hcp lattice layer by layer.
-* <del>Construct fcc/hcp lattice via building conventional cells.</del>
 * Load the fcc/hcp coordinates of atoms from [ISAACS](http://isaacs.sourceforge.net/ex.html)
 
 ## Installation
