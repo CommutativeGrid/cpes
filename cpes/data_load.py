@@ -13,6 +13,7 @@ import os
 from tempfile import NamedTemporaryFile
 
 import numpy as np
+import inspect, pathlib
 
 from .close_packings_via_layers import ClosePacking
 from .points3d import Points3D
@@ -28,7 +29,6 @@ class ExampleDataIsaacs:
                 raw_data = fp.readlines()
             if len(raw_data[-1].split()) <= 1:
                 raw_data.pop()  # delete the last line (an emoji or empty)
-
             with NamedTemporaryFile(delete=False) as fp:
                 for _ in raw_data:
                     fp.write(_)
@@ -52,10 +52,12 @@ class ExampleDataIsaacs:
 class FccAuCart(ExampleDataIsaacs, Points3D):
     def __init__(self, mode="offline"):
         url = "http://isaacs.sourceforge.net/tests/au-cart.xyz"
-        dir_name = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(
-            dir_name, "isaacs_data", "au-cart.xyz"
-        )  # the last line is deleted from the downloaded original file
+        #dir_name should be the place of the package cpes
+        # use pathlib package
+        dir_name = pathlib.Path(inspect.getfile(self.__class__)).parent
+        # use pathlib package
+        path = dir_name / "isaacs_data" / "au-cart.xyz"
+        # the last line is deleted from the downloaded original file
         ExampleDataIsaacs.__init__(self,url, coord_type="cartesian", mode=mode, offline_fp=path)
         self.cartesian = (
             self.original
@@ -75,10 +77,9 @@ class FccAuCart(ExampleDataIsaacs, Points3D):
 class HcpRuFrac(ExampleDataIsaacs, ClosePacking):
     def __init__(self, mode="offline"):
         url = "http://isaacs.sourceforge.net/tests/ru-frac.xyz"
-        dir_name = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(
-            dir_name, "isaacs_data", "ru-frac.xyz"
-        )  # the last line is deleted from the downloaded original file
+        dir_name = pathlib.Path(inspect.getfile(self.__class__)).parent
+        path = dir_name / "isaacs_data" / "ru-frac.xyz"
+         # the last line is deleted from the downloaded original file
         ExampleDataIsaacs.__init__(self,url, coord_type="cartesian", mode=mode, offline_fp=path)
         self.fractional = (
             self.original

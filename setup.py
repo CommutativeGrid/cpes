@@ -34,7 +34,8 @@ INSTALL_REQUIRES = [
     "pythreejs",
     "panel",
     "crystals",
-    "hexalattice @ git+https://github.com/Commutative-Ladder/hexalattice.git"
+    # "hexalattice @ git+https://github.com/Commutative-Ladder/hexalattice.git"
+    "hexalattice==1.3.0"
 ]
 
 setup(
@@ -50,4 +51,5 @@ setup(
     url=URL,
     install_requires=INSTALL_REQUIRES,
     packages=find_packages(),
+    package_data={"cpes": ["isaacs_data/*"]},
 )
