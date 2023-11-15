@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 HERE = pathlib.Path(__file__).parent
 
-VERSION = "0.1.0"
+VERSION = "0.5.0"
 PACKAGE_NAME = "cpes"
 AUTHOR = "初春飾利"
 AUTHOR_EMAIL = "xucgphi@gmail.com"
@@ -18,7 +18,7 @@ CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Science/Research",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Topic :: Scientific/Engineering",
 ]
 
@@ -34,7 +34,6 @@ INSTALL_REQUIRES = [
     "pythreejs",
     "panel",
     "crystals",
-    # "hexalattice @ git+https://github.com/Commutative-Ladder/hexalattice.git"
     "hexalattice==1.3.0"
 ]
 
