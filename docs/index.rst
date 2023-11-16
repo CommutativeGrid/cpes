@@ -9,7 +9,6 @@ Welcome to Close-packing of equal spheres's documentation!
 .. toctree::
    :maxdepth: 2
 
-   aux_functions
    close_packings_via_layers
    data_load
    points3d

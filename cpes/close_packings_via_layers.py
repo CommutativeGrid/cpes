@@ -1,16 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec  1 15:58:28 2021
-
-@author: kasumi
-"""
-import os
 from math import sqrt
 import numpy as np
 import pandas as pd
 from hexalattice.hexalattice import create_hex_grid
-from matplotlib.colors import ListedColormap
 from sklearn.metrics.pairwise import euclidean_distances
 import plotly.express as px
 from operator import itemgetter
@@ -23,11 +14,23 @@ from .points3d import Points3D
 
 class Layer:
     """
-    Basic layer class for planar close packing
-    radius is 0.5 by default
+    Represents a single layer in face-centered cubic (fcc) or hexagonal close-packed (hcp) structures.
     """
 
     def __init__(self, nx, ny, type="A"):
+        """
+        Initializes a Layer object with specified dimensions and type.
+
+        Parameters
+        ----------
+        nx : int
+            The number of points in the x-direction for the layer.
+        ny : int
+            The number of points in the y-direction for the layer.
+        type : str, optional
+            The type of the layer, indicating its position in the stacking order ('A', 'B', or 'C'). 
+            Default is 'A'.
+        """
         self.type = type  # A, B or C
         self.radius = 0.5  # default is 0.5
         # Avoid Argument error in hex_grid:
@@ -63,13 +66,25 @@ class Layer:
 
 
 class ClosePacking(Points3D):
-    def __init__(self, num, radius, num_vector, *args, **kwargs):
-        """a class with support methods for close packings
+    """
+    Represents a close-packed structure of spheres, extending the functionality of Points3D.
 
-        Args:
-            num (int): number of spheres in each direction
-            radius (float): radius of the sphere
-            num_vector (np.array): will be (num,num,num) if not provided by the user.
+    This class is designed to construct and manipulate close-packed structures, such as face-centered 
+    cubic (fcc) or hexagonal close-packed (hcp) systems, using layers of spheres.
+    """
+    def __init__(self, num, radius, num_vector, *args, **kwargs):
+        """
+        Initializes a ClosePacking object with specified dimensions and sphere radius.
+
+        Parameters
+        ----------
+        num : int
+            The number of spheres in each direction.
+        radius : float
+            The radius of each sphere in the packing.
+        num_vector : np.array or str
+            Specifies the arrangement of spheres. If 'auto', it is set to (num, num, num). 
+            Otherwise, it should be an array defining the structure.
         """
         super().__init__(*args, **kwargs)
         self.num = num
@@ -427,11 +442,28 @@ class ClosePacking(Points3D):
 
 class FaceCenteredCubic(ClosePacking):
     """
-    cubic close packing / face centered cubic
-    pattern ABCABCACB...
+    Constructs a face-centered cubic (fcc) structure, following the ABCABC... pattern.
+
+    This class extends ClosePacking for creating and manipulating fcc structures using a 
+    sequence of type A, B, and C layers.
     """
 
     def __init__(self, num=5, radius=1, num_vector="auto", perturbation=False):
+        """
+        Initializes a FaceCenteredCubic object with specified dimensions and sphere radius.
+
+        Parameters
+        ----------
+        num : int, optional
+            The number of spheres in each direction, default is 5.
+        radius : float, optional
+            The radius of each sphere in the packing, default is 1.
+        num_vector : np.array or str, optional
+            Specifies the arrangement of spheres. If 'auto', it is set to (num, num, num).
+            Otherwise, it should be an array defining the structure. Default is 'auto'.
+        perturbation : bool, optional
+            If True, adds a small perturbation to the point cloud, default is False.
+        """
         super().__init__(num=num, radius=radius, num_vector=num_vector)
         nx, ny, nz = self.num_vector
         layer_A = Layer(nx=nx, ny=ny, type="A")
@@ -463,7 +495,9 @@ class FaceCenteredCubic(ClosePacking):
         
 
     def set_palette(self):
-        """function used for assigning different colors for different types of atoms."""
+        """
+        Assigns different colors to different types of atoms for visualization.
+        """
         red = np.array([1, 0, 0, 1])
         yellow = np.array([255/256, 247/256, 0/256, 1])
         blue = np.array([12/256, 238/256, 246/256, 1])
@@ -480,10 +514,28 @@ class FaceCenteredCubic(ClosePacking):
 
 class HexagonalClosePacking(ClosePacking):
     """
-    cubic close packing
+    Constructs a hexagonal close-packed (hcp) structure.
+
+    This class extends ClosePacking for creating and managing hcp structures using alternating 
+    types A and B layers.
     """
 
     def __init__(self, num=5, radius=1, num_vector="auto", perturbation=False):
+        """
+        Initializes a HexagonalClosePacking object with specified dimensions and sphere radius.
+
+        Parameters
+        ----------
+        num : int, optional
+            The number of spheres in each direction, default is 5.
+        radius : float, optional
+            The radius of each sphere in the packing, default is 1.
+        num_vector : np.array or str, optional
+            Specifies the arrangement of spheres. If 'auto', it is set to (num, num, num).
+            Otherwise, it should be an array defining the structure. Default is 'auto'.
+        perturbation : bool, optional
+            If True, adds a small perturbation to the point cloud, default is False.
+        """
         super().__init__(num=num, radius=radius, num_vector=num_vector)
         nx, ny, nz = self.num_vector
         layer_A = Layer(nx=nx, ny=ny, type="A")
@@ -510,7 +562,9 @@ class HexagonalClosePacking(ClosePacking):
         self.df=self.df.assign(is_interior=self.df["neighbours_count"]==12,layer_joined=0)
 
     def set_palette(self):
-        """function used for assigning different colors for different types of atoms."""
+        """
+        Assigns different colors to different types of atoms for visualization.
+        """
         red = np.array([1, 0, 0, 1])
         yellow = np.array([255/256, 247/256, 0/256, 1])
         blue = np.array([12/256, 238/256, 246/256, 1])

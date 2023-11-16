@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Feb 19 20:07:24 2022
-
-@author: hina
-"""
 import pandas as pd
 from tempfile import NamedTemporaryFile
 import subprocess
@@ -13,7 +6,6 @@ import uuid
 from .aux_functions import center_point_cloud
 from ..points3d import Points3D
 import os
-
 
 def cif2df(filepath:str, supercell_str:str, origin_centered=True, mode="crystal", **kwargs)->pd.DataFrame:
     """chains the following tasks together:
@@ -27,7 +19,7 @@ def cif2df(filepath:str, supercell_str:str, origin_centered=True, mode="crystal"
         supercell (str): supercell size
         translation (bool): whether to translate the points to the origin
         mode (str): either "crystal" or "cif2cell"
-        **kwargs: other arguments accepted by cif2cell
+        kwargs: other arguments accepted by cif2cell
     """
     if mode=="crystal":
         output_filename=f"{uuid.uuid4().hex}.xyz"

@@ -1,6 +1,6 @@
 # Close-packing of equal spheres (球の正規最密充填)
 
-This repository contains the Python package `cpes`, which serves as a dependency for the [commutazzi](https://github.com/CommutativeGrids/commutazzio) project. The `cpes`` package focuses on constructing and manipulating close-packed lattice structures.
+This repository contains the Python package `cpes`, which serves as a dependency for the [commutazzio](https://github.com/CommutativeGrids/commutazzio) project. The `cpes`` package focuses on constructing and manipulating close-packed lattice structures.
 
 ## Key Features
 

@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec  7 14:01:04 2021
-
-@author: hina
-"""
-
-
 import tempfile
 import os
 import requests
@@ -14,7 +5,37 @@ import requests
 
 class TempfileFromUrl:
     """
-    class to download a file from a url and save it to a temporary file
+    A context manager class to download a file from a URL and save it to a temporary file. 
+    The file is automatically deleted when the context is exited.
+
+    Parameters
+    ----------
+    url : str
+        The URL from which the file will be downloaded.
+
+    Attributes
+    ----------
+    url : str
+        The URL provided for downloading the file.
+    file : tempfile.NamedTemporaryFile
+        The temporary file object where the downloaded content is stored.
+
+    Methods
+    -------
+    path()
+        Returns the path of the temporary file.
+    __enter__()
+        Context manager entry method. Downloads the file and prepares the temporary file.
+    __exit__(exc_type, exc_value, traceback)
+        Context manager exit method. Cleans up by closing and deleting the temporary file.
+    __del__()
+        Destructor method to ensure the temporary file is closed and deleted.
+
+    Examples
+    --------
+    >>> with TempfileFromUrl('http://example.com/file') as temp_file:
+    ...     for line in temp_file:
+    ...         print(line)
     """
 
     def __init__(self, url):

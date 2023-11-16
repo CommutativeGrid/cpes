@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec  8 18:19:56 2021
-
-@author: kasumi
-"""
 from operator import itemgetter
 from random import choice
 

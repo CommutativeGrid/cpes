@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Dec  8 16:57:24 2021
-
-@author: kasumi
-
-Read the coordinates data downloaded from isaacs
-http://isaacs.sourceforge.net/ex.html#Si
-"""
-
 import os
 from tempfile import NamedTemporaryFile
 
@@ -20,7 +9,33 @@ from .points3d import Points3D
 from .utils import TempfileFromUrl
 
 
+#Read the coordinates data downloaded from isaacs http://isaacs.sourceforge.net/ex.html#Si
 class ExampleDataIsaacs:
+    """
+    A class for handling data from ISAACS (Interactive Structure Analysis of Amorphous and Crystalline Systems).
+
+    Parameters
+    ----------
+    url : str
+        The URL from where the coordinate data is downloaded.
+    coord_type : str
+        The type of coordinates ('cartesian', 'fractional', etc.).
+    mode : str
+        The mode of operation ('online' or 'offline').
+    offline_fp : str, optional
+        The file path for offline data loading. Default is None.
+
+    Attributes
+    ----------
+    original : numpy.ndarray
+        The original coordinates loaded from the file.
+
+    Methods
+    -------
+    __len__()
+        Returns the number of coordinate points.
+
+    """
     def __init__(self, url, coord_type, mode, offline_fp=None):
         self.url = url
         self.coord_type = coord_type
@@ -50,6 +65,26 @@ class ExampleDataIsaacs:
 
 
 class FccAuCart(ExampleDataIsaacs, Points3D):
+    """
+    Represents Face-Centered Cubic (FCC) gold (Au) crystal structure in cartesian coordinates.
+
+    Inherits from ExampleDataIsaacs and Points3D classes.
+
+    Parameters
+    ----------
+    mode : str, optional
+        The mode of operation ('offline' by default).
+
+    Attributes
+    ----------
+    cartesian : numpy.ndarray
+        The cartesian coordinates of the crystal structure.
+    normalized : numpy.ndarray
+        The normalized coordinates scaled to make the radius of the atom 1.0.
+    data : numpy.ndarray
+        The data attribute inherited from Points3D, set to normalized coordinates.
+
+    """
     def __init__(self, mode="offline"):
         url = "http://isaacs.sourceforge.net/tests/au-cart.xyz"
         #dir_name should be the place of the package cpes
@@ -75,6 +110,28 @@ class FccAuCart(ExampleDataIsaacs, Points3D):
 # online calculator for transformation of coordinates
 # https://cci.lbl.gov/cctbx/frac_cart.html
 class HcpRuFrac(ExampleDataIsaacs, ClosePacking):
+    """
+    Represents Hexagonal Close-Packed (HCP) ruthenium (Ru) crystal structure in fractional coordinates.
+
+    Inherits from ExampleDataIsaacs and ClosePacking classes.
+
+    Parameters
+    ----------
+    mode : str, optional
+        The mode of operation ('offline' by default).
+
+    Attributes
+    ----------
+    fractional : numpy.ndarray
+        The fractional coordinates of the crystal structure.
+    cartesian : numpy.ndarray
+        The converted cartesian coordinates from the fractional coordinates.
+    normalized : numpy.ndarray
+        The normalized coordinates scaled to make the radius of the atom 1.0.
+    data : numpy.ndarray
+        The data attribute inherited from Points3D, set to normalized coordinates.
+
+    """
     def __init__(self, mode="offline"):
         url = "http://isaacs.sourceforge.net/tests/ru-frac.xyz"
         dir_name = pathlib.Path(inspect.getfile(self.__class__)).parent
@@ -112,6 +169,28 @@ class HcpRuFrac(ExampleDataIsaacs, ClosePacking):
 
 
 class FccSiFrac(ExampleDataIsaacs, ClosePacking):
+    """
+    Represents Face-Centered Cubic (FCC) silicon (Si) crystal structure in fractional coordinates.
+
+    Inherits from ExampleDataIsaacs and ClosePacking classes.
+
+    Parameters
+    ----------
+    mode : str, optional
+        The mode of operation ('offline' by default).
+
+    Attributes
+    ----------
+    fractional : numpy.ndarray
+        The fractional coordinates of the crystal structure.
+    cartesian : numpy.ndarray
+        The converted cartesian coordinates from the fractional coordinates.
+    normalized : numpy.ndarray
+        The normalized coordinates scaled to make the radius of the atom 1.0.
+    data : numpy.ndarray
+        The data attribute inherited from Points3D, set to normalized coordinates.
+
+    """
     def __init__(self, mode="offline"):
         url = "http://isaacs.sourceforge.net/tests/si-frac.xyz"
         dir_name = os.path.dirname(os.path.abspath(__file__))
