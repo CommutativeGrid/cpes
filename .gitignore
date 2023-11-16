@@ -10,6 +10,9 @@ cpes/__pycache__/*
 
 /cpes/obsolete/*
 
+docs/_static/
+docs/_templates
+
 # C extensions
 *.so
 
