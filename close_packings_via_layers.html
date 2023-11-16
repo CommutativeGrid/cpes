@@ -43,7 +43,32 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">close_packings_via_layers module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">close_packings_via_layers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking"><code class="docutils literal notranslate"><span class="pre">ClosePacking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.coordination_number"><code class="docutils literal notranslate"><span class="pre">ClosePacking.coordination_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.interiorPoints_count"><code class="docutils literal notranslate"><span class="pre">ClosePacking.interiorPoints_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.neighbours_counting"><code class="docutils literal notranslate"><span class="pre">ClosePacking.neighbours_counting()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.plot_coordination_number"><code class="docutils literal notranslate"><span class="pre">ClosePacking.plot_coordination_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.ratio"><code class="docutils literal notranslate"><span class="pre">ClosePacking.ratio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.thinning"><code class="docutils literal notranslate"><span class="pre">ClosePacking.thinning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking.thinning_obsolete"><code class="docutils literal notranslate"><span class="pre">ClosePacking.thinning_obsolete()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.close_packings_via_layers.FaceCenteredCubic"><code class="docutils literal notranslate"><span class="pre">FaceCenteredCubic</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.FaceCenteredCubic.set_palette"><code class="docutils literal notranslate"><span class="pre">FaceCenteredCubic.set_palette()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.close_packings_via_layers.HexagonalClosePacking"><code class="docutils literal notranslate"><span class="pre">HexagonalClosePacking</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.HexagonalClosePacking.set_palette"><code class="docutils literal notranslate"><span class="pre">HexagonalClosePacking.set_palette()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.close_packings_via_layers.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.Layer.df"><code class="docutils literal notranslate"><span class="pre">Layer.df</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.close_packings_via_layers.Layer.lift"><code class="docutils literal notranslate"><span class="pre">Layer.lift()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="data_load.html">data_load module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="points3d.html">points3d module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/aux_functions.html">utils/aux_functions module</a></li>
@@ -75,8 +100,113 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="close-packings-via-layers-module">
-<h1>close_packings_via_layers module<a class="headerlink" href="#close-packings-via-layers-module" title="Link to this heading"></a></h1>
+  <section id="module-cpes.close_packings_via_layers">
+<span id="close-packings-via-layers-module"></span><h1>close_packings_via_layers module<a class="headerlink" href="#module-cpes.close_packings_via_layers" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpes.close_packings_via_layers.</span></span><span class="sig-name descname"><span class="pre">ClosePacking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_vector</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="points3d.html#cpes.points3d.Points3D" title="cpes.points3d.Points3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">Points3D</span></code></a></p>
+<p>Represents a close-packed structure of spheres, extending the functionality of Points3D.</p>
+<p>This class is designed to construct and manipulate close-packed structures, such as face-centered 
+cubic (fcc) or hexagonal close-packed (hcp) systems, using layers of spheres.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.coordination_number">
+<span class="sig-name descname"><span class="pre">coordination_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.coordination_number" title="Link to this definition"></a></dt>
+<dd><p>coordination number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.interiorPoints_count">
+<span class="sig-name descname"><span class="pre">interiorPoints_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.interiorPoints_count" title="Link to this definition"></a></dt>
+<dd><p>return the number of interior points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.neighbours_counting">
+<span class="sig-name descname"><span class="pre">neighbours_counting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.neighbours_counting" title="Link to this definition"></a></dt>
+<dd><p>Compute the number of neighbours for each point
+and add that to the dataframe</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.plot_coordination_number">
+<span class="sig-name descname"><span class="pre">plot_coordination_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'neighbours_count'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.plot_coordination_number" title="Link to this definition"></a></dt>
+<dd><p>plot with coordination number implied
+color_column: neighbours or is_interior</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.ratio">
+<span class="sig-name descname"><span class="pre">ratio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.ratio" title="Link to this definition"></a></dt>
+<dd><p>return the packing density</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.thinning">
+<span class="sig-name descname"><span class="pre">thinning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_removal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'survived'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_removable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.thinning" title="Link to this definition"></a></dt>
+<dd><p>mode: singlet, doublet, triplet
+thinning with paired thinning
+remove adjacent pairs of atoms
+from_layer: the layer to remove atoms from
+to_layer: the layer to remove atoms to
+layer_joined: the layer that the atom is currently in</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.ClosePacking.thinning_obsolete">
+<span class="sig-name descname"><span class="pre">thinning_obsolete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survival_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_removal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'survived'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_removable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'is_interior'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.ClosePacking.thinning_obsolete" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.FaceCenteredCubic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpes.close_packings_via_layers.</span></span><span class="sig-name descname"><span class="pre">FaceCenteredCubic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.FaceCenteredCubic" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking" title="cpes.close_packings_via_layers.ClosePacking"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClosePacking</span></code></a></p>
+<p>Constructs a face-centered cubic (fcc) structure, following the ABCABC… pattern.</p>
+<p>This class extends ClosePacking for creating and manipulating fcc structures using a 
+sequence of type A, B, and C layers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.FaceCenteredCubic.set_palette">
+<span class="sig-name descname"><span class="pre">set_palette</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.FaceCenteredCubic.set_palette" title="Link to this definition"></a></dt>
+<dd><p>Assigns different colors to different types of atoms for visualization.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.HexagonalClosePacking">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpes.close_packings_via_layers.</span></span><span class="sig-name descname"><span class="pre">HexagonalClosePacking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.HexagonalClosePacking" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cpes.close_packings_via_layers.ClosePacking" title="cpes.close_packings_via_layers.ClosePacking"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClosePacking</span></code></a></p>
+<p>Constructs a hexagonal close-packed (hcp) structure.</p>
+<p>This class extends ClosePacking for creating and managing hcp structures using alternating 
+types A and B layers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.HexagonalClosePacking.set_palette">
+<span class="sig-name descname"><span class="pre">set_palette</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.HexagonalClosePacking.set_palette" title="Link to this definition"></a></dt>
+<dd><p>Assigns different colors to different types of atoms for visualization.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.Layer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpes.close_packings_via_layers.</span></span><span class="sig-name descname"><span class="pre">Layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'A'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.Layer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a single layer in face-centered cubic (fcc) or hexagonal close-packed (hcp) structures.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.Layer.df">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">df</span></span><a class="headerlink" href="#cpes.close_packings_via_layers.Layer.df" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.close_packings_via_layers.Layer.lift">
+<span class="sig-name descname"><span class="pre">lift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raise_z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.close_packings_via_layers.Layer.lift" title="Link to this definition"></a></dt>
+<dd><p>lift a layer of atoms represented by a 2d numpy array</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

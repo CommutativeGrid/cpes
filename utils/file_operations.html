@@ -47,7 +47,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../points3d.html">points3d module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aux_functions.html">utils/aux_functions module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cif2df.html">utils/cif2df module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">utils/file_operations module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">utils/file_operations module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.file_operations.TempfileFromUrl"><code class="docutils literal notranslate"><span class="pre">TempfileFromUrl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.utils.file_operations.TempfileFromUrl.path"><code class="docutils literal notranslate"><span class="pre">TempfileFromUrl.path()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -74,8 +80,62 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="utils-file-operations-module">
-<h1>utils/file_operations module<a class="headerlink" href="#utils-file-operations-module" title="Link to this heading"></a></h1>
+  <section id="module-cpes.utils.file_operations">
+<span id="utils-file-operations-module"></span><h1>utils/file_operations module<a class="headerlink" href="#module-cpes.utils.file_operations" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cpes.utils.file_operations.TempfileFromUrl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpes.utils.file_operations.</span></span><span class="sig-name descname"><span class="pre">TempfileFromUrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.file_operations.TempfileFromUrl" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A context manager class to download a file from a URL and save it to a temporary file. 
+The file is automatically deleted when the context is exited.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>url</strong><span class="classifier">str</span></dt><dd><p>The URL from which the file will be downloaded.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">TempfileFromUrl</span><span class="p">(</span><span class="s1">&#39;http://example.com/file&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">temp_file</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>url</strong><span class="classifier">str</span></dt><dd><p>The URL provided for downloading the file.</p>
+</dd>
+<dt><strong>file</strong><span class="classifier">tempfile.NamedTemporaryFile</span></dt><dd><p>The temporary file object where the downloaded content is stored.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>path()</strong></p></td>
+<td><p>Returns the path of the temporary file.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>__enter__()</strong></p></td>
+<td><p>Context manager entry method. Downloads the file and prepares the temporary file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>__exit__(exc_type, exc_value, traceback)</strong></p></td>
+<td><p>Context manager exit method. Cleans up by closing and deleting the temporary file.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>__del__()</strong></p></td>
+<td><p>Destructor method to ensure the temporary file is closed and deleted.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.utils.file_operations.TempfileFromUrl.path">
+<span class="sig-name descname"><span class="pre">path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.file_operations.TempfileFromUrl.path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
 

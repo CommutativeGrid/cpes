@@ -47,7 +47,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../data_load.html">data_load module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../points3d.html">points3d module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aux_functions.html">utils/aux_functions module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">utils/cif2df module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">utils/cif2df module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.cif2df.cif2df"><code class="docutils literal notranslate"><span class="pre">cif2df()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="file_operations.html">utils/file_operations module</a></li>
 </ul>
 
@@ -75,8 +78,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="utils-cif2df-module">
-<h1>utils/cif2df module<a class="headerlink" href="#utils-cif2df-module" title="Link to this heading"></a></h1>
+  <section id="module-cpes.utils.cif2df">
+<span id="utils-cif2df-module"></span><h1>utils/cif2df module<a class="headerlink" href="#module-cpes.utils.cif2df" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.cif2df.cif2df">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.cif2df.</span></span><span class="sig-name descname"><span class="pre">cif2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supercell_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin_centered</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'crystal'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.DataFrame</span></span></span><a class="headerlink" href="#cpes.utils.cif2df.cif2df" title="Link to this definition"></a></dt>
+<dd><p>chains the following tasks together:
+1.Receive user input about supercell size
+2.Execute the cif2cell command generated based on user input
+3.Save the output as a temp file
+4.Load the temp file, delete extra lines, save as a dataframe and return</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>filepath (str): path to the cif file
+supercell (str): supercell size
+translation (bool): whether to translate the points to the origin
+mode (str): either “crystal” or “cif2cell”
+kwargs: other arguments accepted by cif2cell</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

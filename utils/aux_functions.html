@@ -46,7 +46,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../close_packings_via_layers.html">close_packings_via_layers module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data_load.html">data_load module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../points3d.html">points3d module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">utils/aux_functions module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">utils/aux_functions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.atomic_packing_factor"><code class="docutils literal notranslate"><span class="pre">atomic_packing_factor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.center_point_cloud"><code class="docutils literal notranslate"><span class="pre">center_point_cloud()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.coordination_number"><code class="docutils literal notranslate"><span class="pre">coordination_number()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.distance_array"><code class="docutils literal notranslate"><span class="pre">distance_array()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.plot_3d"><code class="docutils literal notranslate"><span class="pre">plot_3d()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.rdf_plot"><code class="docutils literal notranslate"><span class="pre">rdf_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.sphere_confine"><code class="docutils literal notranslate"><span class="pre">sphere_confine()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.utils.aux_functions.thinning_aux"><code class="docutils literal notranslate"><span class="pre">thinning_aux()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="cif2df.html">utils/cif2df module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="file_operations.html">utils/file_operations module</a></li>
 </ul>
@@ -75,8 +85,83 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="utils-aux-functions-module">
-<h1>utils/aux_functions module<a class="headerlink" href="#utils-aux-functions-module" title="Link to this heading"></a></h1>
+  <section id="module-cpes.utils.aux_functions">
+<span id="utils-aux-functions-module"></span><h1>utils/aux_functions module<a class="headerlink" href="#module-cpes.utils.aux_functions" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.atomic_packing_factor">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">atomic_packing_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.atomic_packing_factor" title="Link to this definition"></a></dt>
+<dd><p>returns the atomic packing factor</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.center_point_cloud">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">center_point_cloud</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.center_point_cloud" title="Link to this definition"></a></dt>
+<dd><p>return the index of the point closest to the center of the point cloud</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.coordination_number">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">coordination_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crictical_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.coordination_number" title="Link to this definition"></a></dt>
+<dd><p>Return the number of atoms within radius crictical_value of the anchor.
+When crictical_value is the shortest distance between two atoms, this function
+returns the coordination number of the anchor atom.</p>
+<p>coordination number of the anchor atom in the data.
+result may change when using random mode</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.distance_array">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">distance_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.distance_array" title="Link to this definition"></a></dt>
+<dd><p>returns the distance between atoms in increasing order
+By default only the smallest 20 values are returned</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.plot_3d">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">plot_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.plot_3d" title="Link to this definition"></a></dt>
+<dd><p>plot data in 3d</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.rdf_plot">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">rdf_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divided_by_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.rdf_plot" title="Link to this definition"></a></dt>
+<dd><p>plot the radial distribution function
+point cloud needs to be centered
+The result is orientation dependent
+Step shall not be too small</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.sphere_confine">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">sphere_confine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.sphere_confine" title="Link to this definition"></a></dt>
+<dd><p>confine the data to a sphere with the given radius</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cpes.utils.aux_functions.thinning_aux">
+<span class="sig-prename descclassname"><span class="pre">cpes.utils.aux_functions.</span></span><span class="sig-name descname"><span class="pre">thinning_aux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_removal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'homcloud'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_removable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.utils.aux_functions.thinning_aux" title="Link to this definition"></a></dt>
+<dd><p>delete points randomly from data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>data</strong><span class="classifier">ndarray</span></dt><dd><p>the data to be thinned</p>
+</dd>
+<dt><strong>survival_rate</strong><span class="classifier">float</span></dt><dd><p>percentage of points to survive</p>
+</dd>
+<dt><strong>style</strong><span class="classifier">str, optional</span></dt><dd><p>the style of thinning. The default is ‘homcloud’.
+‘homcloud’ : remained points will be labelled 0.
+‘survived’ : only returns the survived points.</p>
+</dd>
+<dt><strong>is_removable: str, or list of str, optional</strong></dt><dd><p>name of the column to be used as the removal criteria.</p>
+</dd>
+<dt><strong>The meaning of 間引き率 in the paper may lead different understandings</strong></dt><dd></dd>
+<dt><strong>(for example see table 1 in section 4 of the paper below:</strong></dt><dd></dd>
+<dt><strong>https://www.jstage.jst.go.jp/article/jsiamt/3/2/3_KJ00002977660/_pdf/-char/ja)</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

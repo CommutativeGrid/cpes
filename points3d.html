@@ -45,7 +45,29 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="close_packings_via_layers.html">close_packings_via_layers module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_load.html">data_load module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">points3d module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">points3d module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cpes.points3d.Points3D"><code class="docutils literal notranslate"><span class="pre">Points3D</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.add_perturbation"><code class="docutils literal notranslate"><span class="pre">Points3D.add_perturbation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.data"><code class="docutils literal notranslate"><span class="pre">Points3D.data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.diameter"><code class="docutils literal notranslate"><span class="pre">Points3D.diameter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.distance_array"><code class="docutils literal notranslate"><span class="pre">Points3D.distance_array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.is_originCentered"><code class="docutils literal notranslate"><span class="pre">Points3D.is_originCentered()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.normalise"><code class="docutils literal notranslate"><span class="pre">Points3D.normalise()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.plot"><code class="docutils literal notranslate"><span class="pre">Points3D.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.plot_pyvista"><code class="docutils literal notranslate"><span class="pre">Points3D.plot_pyvista()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.plot_pyvista_dim2"><code class="docutils literal notranslate"><span class="pre">Points3D.plot_pyvista_dim2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.plot_pyvista_h"><code class="docutils literal notranslate"><span class="pre">Points3D.plot_pyvista_h()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.plot_pyvista_tetrahedron"><code class="docutils literal notranslate"><span class="pre">Points3D.plot_pyvista_tetrahedron()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.random_delete"><code class="docutils literal notranslate"><span class="pre">Points3D.random_delete()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.rdf_plot"><code class="docutils literal notranslate"><span class="pre">Points3D.rdf_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.sphere_confine"><code class="docutils literal notranslate"><span class="pre">Points3D.sphere_confine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.thinning"><code class="docutils literal notranslate"><span class="pre">Points3D.thinning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.type_vector"><code class="docutils literal notranslate"><span class="pre">Points3D.type_vector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpes.points3d.Points3D.xyz"><code class="docutils literal notranslate"><span class="pre">Points3D.xyz</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="utils/aux_functions.html">utils/aux_functions module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/cif2df.html">utils/cif2df module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils/file_operations.html">utils/file_operations module</a></li>
@@ -75,8 +97,266 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="points3d-module">
-<h1>points3d module<a class="headerlink" href="#points3d-module" title="Link to this heading"></a></h1>
+  <section id="module-cpes.points3d">
+<span id="points3d-module"></span><h1>points3d module<a class="headerlink" href="#module-cpes.points3d" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpes.points3d.</span></span><span class="sig-name descname"><span class="pre">Points3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">pandas.DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages a collection of 3D points with associated types for color categorization.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.add_perturbation">
+<span class="sig-name descname"><span class="pre">add_perturbation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.add_perturbation" title="Link to this definition"></a></dt>
+<dd><p>Adds random perturbation to the points’ coordinates.</p>
+<p>This method introduces a small, normally distributed random perturbation to each coordinate
+of the points, with a mean of 0 and a standard deviation of 1e-4.</p>
+<p class="rubric">Notes</p>
+<p>The perturbation is applied in place, modifying the original point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#cpes.points3d.Points3D.data" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the xyz coordinates from the DataFrame as a NumPy array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>A NumPy array of shape (n, 3), where ‘n’ is the number of points,
+containing the xyz coordinates.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.diameter">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">diameter</span></span><a class="headerlink" href="#cpes.points3d.Points3D.diameter" title="Link to this definition"></a></dt>
+<dd><p>Calculates and returns the maximum distance between any two points in the dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.distance_array">
+<span class="sig-name descname"><span class="pre">distance_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.distance_array" title="Link to this definition"></a></dt>
+<dd><p>Computes distances to the k-th nearest neighbor for all points in the cloud.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>n</strong><span class="classifier">int, optional</span></dt><dd><p>The order of the nearest neighbor to which the distance is calculated, default is 20.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>An array containing the distances to the n-th nearest neighbor for each point.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.is_originCentered">
+<span class="sig-name descname"><span class="pre">is_originCentered</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.is_originCentered" title="Link to this definition"></a></dt>
+<dd><p>Checks if the mass center of the point cloud is at the origin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>bool</dt><dd><p>True if the mass center is close to the origin, False otherwise.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.normalise" title="Link to this definition"></a></dt>
+<dd><p>Rescales the coordinates so that the minimum distance between points becomes 2.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.plot" title="Link to this definition"></a></dt>
+<dd><p>Plots the point cloud using Plotly or PyVista, depending on the environment.</p>
+<p>The method detects the running environment and chooses the appropriate plotting library.
+In Spyder, it uses PyVista, while in other environments, it uses Plotly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.plot_pyvista">
+<span class="sig-name descname"><span class="pre">plot_pyvista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pythreejs'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.plot_pyvista" title="Link to this definition"></a></dt>
+<dd><p>Plots the point cloud using PyVista with the specified backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>backend</strong><span class="classifier">str, optional</span></dt><dd><p>The backend used for rendering the plot, default is ‘pythreejs’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.plot_pyvista_dim2">
+<span class="sig-name descname"><span class="pre">plot_pyvista_dim2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pythreejs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.plot_pyvista_dim2" title="Link to this definition"></a></dt>
+<dd><p>This is a specific function for plotting a figure in the paper,
+not for general use.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.plot_pyvista_h">
+<span class="sig-name descname"><span class="pre">plot_pyvista_h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pythreejs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.plot_pyvista_h" title="Link to this definition"></a></dt>
+<dd><p>Plots the point cloud using PyVista with highlighted points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>backend</strong><span class="classifier">str, optional</span></dt><dd><p>The backend used for rendering the plot. Defaults to ‘pythreejs’.</p>
+</dd>
+<dt><strong>highlight</strong><span class="classifier">list, optional</span></dt><dd><p>A list of indices of points to highlight. If None, no points are highlighted.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.plot_pyvista_tetrahedron">
+<span class="sig-name descname"><span class="pre">plot_pyvista_tetrahedron</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pythreejs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.plot_pyvista_tetrahedron" title="Link to this definition"></a></dt>
+<dd><p>This is a specific function for plotting a figure in the paper,
+not for general use.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.random_delete">
+<span class="sig-name descname"><span class="pre">random_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deletion_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.random_delete" title="Link to this definition"></a></dt>
+<dd><p>Randomly deletes points based on the specified deletion rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deletion_rate</strong><span class="classifier">float</span></dt><dd><p>The proportion of points to delete, between 0 and 1.</p>
+</dd>
+<dt><strong>inplace</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, deletion is done in place and modifies the original data. 
+Otherwise, a new instance with deleted points is returned.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Points3D or None</dt><dd><p>A new Points3D instance with points removed if inplace is False, 
+or None if inplace is True.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.rdf_plot">
+<span class="sig-name descname"><span class="pre">rdf_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divided_by_2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.rdf_plot" title="Link to this definition"></a></dt>
+<dd><p>Plots the radial distribution function (RDF) for the points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>start</strong><span class="classifier">float or None, optional</span></dt><dd><p>The starting distance for calculating RDF. If None, it’s set to 90% of the third nearest neighbor distance.</p>
+</dd>
+<dt><strong>end</strong><span class="classifier">float, optional</span></dt><dd><p>The ending distance for the RDF plot, default is 6.</p>
+</dd>
+<dt><strong>step</strong><span class="classifier">float, optional</span></dt><dd><p>The step size for distance increment in RDF calculation, default is 0.01.</p>
+</dd>
+<dt><strong>divided_by_2</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the RDF values are halved, default is True.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>matplotlib.figure.Figure</dt><dd><p>A plot of the radial distribution function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.sphere_confine">
+<span class="sig-name descname"><span class="pre">sphere_confine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.sphere_confine" title="Link to this definition"></a></dt>
+<dd><p>Confines the points within a sphere of the given radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>radius</strong><span class="classifier">float</span></dt><dd><p>The radius of the sphere within which the points are to be confined.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Points3D</dt><dd><p>A new Points3D instance with points confined within the specified sphere.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.thinning">
+<span class="sig-name descname"><span class="pre">thinning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survival_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_removal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'homcloud'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_removable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpes.points3d.Points3D.thinning" title="Link to this definition"></a></dt>
+<dd><p>Thins the point cloud according to the specified survival rate and thinning style.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>survival_rate</strong><span class="classifier">float</span></dt><dd><p>The proportion of points to retain in the point cloud.</p>
+</dd>
+<dt><strong>number_removal</strong><span class="classifier">int, optional</span></dt><dd><p>Number of removal iterations to perform. Defaults to 10.</p>
+</dd>
+<dt><strong>inplace</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, thinning is performed in place. Defaults to True.</p>
+</dd>
+<dt><strong>save_path</strong><span class="classifier">str, optional</span></dt><dd><p>File path to save the thinned data. If None, data is not saved.</p>
+</dd>
+<dt><strong>is_removable</strong><span class="classifier">function or None, optional</span></dt><dd><p>Function to determine if a point can be removed. If None, all points are removable.</p>
+</dd>
+<dt><strong>style</strong><span class="classifier">str, optional</span></dt><dd><p>Thinning style, can be ‘homcloud’ or ‘survived’. Defaults to ‘homcloud’.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Various</dt><dd><p>Depending on the thinning style, returns a file path, thinned data, or a new Points3D instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.type_vector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">type_vector</span></span><a class="headerlink" href="#cpes.points3d.Points3D.type_vector" title="Link to this definition"></a></dt>
+<dd><p>Gets the type vector representing the category or color of each point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>pandas.Series</dt><dd><p>A series containing the types of each point.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cpes.points3d.Points3D.xyz">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xyz</span></span><a class="headerlink" href="#cpes.points3d.Points3D.xyz" title="Link to this definition"></a></dt>
+<dd><p>Gets the xyz coordinates of the points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>numpy.ndarray</dt><dd><p>An array containing the xyz coordinates of the points.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
