@@ -2,6 +2,11 @@
 
 This repository contains the Python package `cpes`, which serves as a dependency for the [commutazzio](https://github.com/CommutativeGrids/commutazzio) project. The `cpes`` package focuses on constructing and manipulating close-packed lattice structures.
 
+## Documentation
+
+The documentation for `cpes` can be found at [https://commutativegrids.github.io/cpes/](https://commutativegrids.github.io/cpes/).
+
+
 ## Key Features
 
 * Construction of face-centered cubic (fcc) and hexagonal close-packed (hcp) lattice structures layer by layer.
