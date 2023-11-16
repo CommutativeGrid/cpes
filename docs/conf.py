@@ -16,7 +16,7 @@ html_theme = 'sphinx_rtd_theme'
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
-import cpes
+# import cpes
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -37,6 +37,20 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 numpydoc_show_class_members = False 
+autodoc_mock_imports = [
+    "numpy",
+    "pandas",
+    "rdfpy",
+    "plotly",
+    "pyvista",
+    "pythreejs",
+    "panel",
+    "crystals",
+    "hexalattice",
+    "sklearn",
+    "matplotlib",
+    "scipy"
+]
 
 
 
