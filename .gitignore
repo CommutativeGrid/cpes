@@ -8,6 +8,8 @@ cpes/__pycache__/*
 */*/*.pyc
 */*.pyc
 
+/cpes/obsolete/*
+
 # C extensions
 *.so
 
