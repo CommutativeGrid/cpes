@@ -1,6 +1,6 @@
 # Close-packing of equal spheres (球の正規最密充填)
 
-This repository contains the Python package `cpes`, which serves as a dependency for the [commutazzio](https://github.com/CommutativeGrids/commutazzio) project. The `cpes`` package focuses on constructing and manipulating close-packed lattice structures.
+This repository contains the Python package `cpes`, which serves as a dependency for the [commutazzio](https://github.com/CommutativeGrids/commutazzio) project. The `cpes` package focuses on constructing and manipulating *FCC* and *HCP* structures.
 
 ## Documentation
 
@@ -10,7 +10,7 @@ The documentation for `cpes` can be found at [https://commutativegrids.github.io
 ## Key Features
 
 * Construction of face-centered cubic (fcc) and hexagonal close-packed (hcp) lattice structures layer by layer.
-* * Load the fcc/hcp coordinates of atoms from [ISAACS](http://isaacs.sourceforge.net/ex.html)
+* Load the fcc/hcp coordinates of atoms from [ISAACS](http://isaacs.sourceforge.net/ex.html)
 
 
 ## Installation
