@@ -23,8 +23,8 @@ CLASSIFIERS = [
 ]
 
 INSTALL_REQUIRES = [
-    "numpy",
-    "pandas",
+    "numpy">="1.21.0",
+    "pandas">="2.0.0",
     "scikit-learn",
     "rdfpy",
     "matplotlib",
