@@ -23,17 +23,17 @@ CLASSIFIERS = [
 ]
 
 INSTALL_REQUIRES = [
-    "numpy">="1.21.0",
-    "pandas">="2.0.0",
-    "scikit-learn",
-    "rdfpy",
-    "matplotlib",
-    "requests",
-    "plotly",
-    "pyvista",
-    "pythreejs",
-    "panel",
-    "crystals",
+    "numpy>=1.21.0",
+    "pandas>=2.0.0",
+    "scikit-learn>=1.2.2",
+    "rdfpy>=1.0.0",
+    "matplotlib>=3.8.0",
+    "requests>=2.28.0",
+    "plotly>=5.15.0",
+    "pyvista>=0.39.0",
+    "pythreejs>=2.4.0",
+    "panel>=0.14.0",
+    "crystals>=1.6.0",
     "hexalattice==1.3.0"
 ]
 
